@@ -15,10 +15,16 @@ $('#jinsom-upload-avatar').val('');
 if(data.code == 1){
 $('.jinsom-member-avatar img').attr('src',data.file_url);
 }else if(data.code == 3){
-layer.msg(data.msg);
+jinsom_msg(data.msg);
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
+}else if(data.code == 4){
+jinsom_msg(data.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(data.code == 5){
+jinsom_msg(data.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
-layer.msg(data.msg);
+jinsom_msg(data.msg);
 }
 }, 
 error:function(){
@@ -71,6 +77,12 @@ if(msg.code==0){
 bar.width('0');
 }else if(msg.code==1){
 $('#jinsom-video-url').val(msg.file_url);
+}else if(msg.code == 4){
+bar.width('0');
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(msg.code == 5){
+bar.width('0');
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }
 
 
@@ -127,6 +139,12 @@ if(msg.code==0){
 bar.width('0');
 }else if(msg.code==1){
 $('#jinsom-music-url').val(msg.file_url);
+}else if(msg.code == 4){
+bar.width('0');
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(msg.code == 5){
+bar.width('0');
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }
 
 
@@ -180,6 +198,12 @@ bar.width('0');
 }else if(msg.code == 1){
 $('#jinsom-bg-music-url').val(msg.file_url);
 $('#jinsom-upload-user-bg-music').val('');
+}else if(msg.code == 4){
+bar.width('0');
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(msg.code == 5){
+bar.width('0');
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }
 
 }, 
@@ -216,7 +240,7 @@ if(percent.children('i').length==0){
 
 $("#jinsom-insert-file-form").ajaxSubmit({
 dataType : "json",
-timeout: 120000,//120秒退出
+timeout: 1200000,//1200秒退出
 beforeSend: function() {
 $('#jinsom-insert-file').hide();
 progress.show();
@@ -239,6 +263,16 @@ if(data.code == 1){
 $('#jinsom-insert-file-url').val(data.file_url);
 $('#jinsom-insert-file-name').val(data.name);
 percent.html('上传成功！100%').children('i').remove();
+}else if(data.code == 4){
+progress.hide();
+percent.children('i').remove();
+jinsom_msg(data.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(data.code == 5){
+progress.hide();
+percent.children('i').remove();
+jinsom_msg(data.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 progress.hide();
 percent.children('i').remove();
@@ -249,6 +283,7 @@ error:function(){
 $('#jinsom-insert-file-input').val('');
 layer.msg('上传失败！服务器配置问题！');
 $('#jinsom-insert-file').show();
+percent.children('i').remove();
 progress.hide();
 return false;
 } 
@@ -277,6 +312,12 @@ done: function(res, index, upload){
 if(res.code == 1){
 ue_single.focus();
 ue_single.execCommand('inserthtml','<img src="'+res.file_url+'">');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }
@@ -303,6 +344,12 @@ done: function(res, index, upload){
 if(res.code == 1){
 ue.focus();
 ue.execCommand('inserthtml','<img src="'+res.file_url+'">');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }
@@ -329,6 +376,12 @@ done: function(res, index, upload){
 if(res.code == 1){
 ue_single_pay.focus();
 ue_single_pay.execCommand('inserthtml','<img src="'+res.file_url+'">');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }
@@ -355,6 +408,12 @@ done: function(res, index, upload){
 if(res.code == 1){
 ue_pay.focus();
 ue_pay.execCommand('inserthtml','<img src="'+res.file_url+'">');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }
@@ -372,7 +431,7 @@ $('#jinsom-bbs-pay-upload').html('<i class="fa fa-picture-o"></i>');
 upload.render({
 elem: '#jinsom-bbs-comment-upload',
 url: jinsom.jinsom_ajax_url+'/upload/bbs.php',
-multiple:false,
+multiple:true,
 accept:'file',
 before: function(obj){
 $('#jinsom-bbs-comment-upload').html('<i class="fa fa-spin fa-refresh">');
@@ -382,6 +441,12 @@ $('#jinsom-bbs-comment-upload').html('<i class="fa fa-picture-o"></i>');
 if(res.code == 1){
 ue.focus();
 ue.execCommand('inserthtml','<img src="'+res.file_url+'">');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }

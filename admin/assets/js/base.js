@@ -170,12 +170,18 @@ function c(){window.location.reload();}setTimeout(c,2000);
 //metabox导出备份
 function jinsom_amdin_backup_metabox(){
 post_id=jinsom_getUrlParam('post');
+if($('.jinsom-panel-show').length>0){
+option=$('.jinsom-panel-show').attr('id');
+}else{
+option='';
+}
 if(!post_id){
 alert('请新建页面之后再进行导出数据操作！');
 return false;
 }
 type=$('.components-select-control__input').val();
-window.open(jinsom.theme_url+"/module/admin/action/admin-setting-metabox-back.php?download&post_id="+post_id+"&type="+type);
+
+window.open(jinsom.theme_url+"/module/admin/action/admin-setting-metabox-back.php?download&post_id="+post_id+"&type="+type+"&option="+option);
 }
 
 
@@ -186,6 +192,13 @@ if(!post_id){
 alert('请新建页面之后再进行导入数据操作！');
 return false;
 }
+
+if($('.jinsom-panel-show').length>0){
+option=$('.jinsom-panel-show').attr('id');
+}else{
+option='';
+}
+
 type=$('.components-select-control__input').val();
 backup=$('#jinsom-admin-backup-metabox-val').val();
 if(backup=='delete'){
@@ -200,7 +213,7 @@ layer.load(1);
 $.ajax({
 type:"POST",
 url: jinsom.jinsom_ajax_url+"/admin/action/admin-setting-metabox-back.php",
-data:{backup:backup,post_id:post_id,type:type},
+data:{backup:backup,post_id:post_id,type:type,option:option},
 success: function(msg){
 layer.closeAll('loading');
 layer.msg(msg.msg);
@@ -246,7 +259,7 @@ layer.closeAll('loading');
 layer.open({
 title:'卡密管理',
 type: 1,
-area: ['700px', '520px'], 
+area: ['800px', '520px'], 
 content: msg
 });
 }
@@ -709,6 +722,9 @@ function jinsom_admin_recharge_form(type){
 if(type=='money'){
 url=jinsom.jinsom_ajax_url+"/admin/stencil/recharge-money.php";
 title=jinsom.money_name+'充值记录';
+}else if(type=='extcredits'){
+url=jinsom.jinsom_ajax_url+"/admin/stencil/recharge-extcredits.php";
+title=jinsom.extcredits_name+'充值记录';
 }else{
 url=jinsom.jinsom_ajax_url+"/admin/stencil/recharge.php";
 title=jinsom.credit_name+'充值记录';
@@ -817,15 +833,21 @@ content: msg.msg
 
 
 //弹出提现记录表单
-function jinsom_admin_cash_form(){
+function jinsom_admin_cash_form(type){
+if(type=='money'){
+title='余额提现记录';
+}else{
+title='金币提现记录';
+}
 layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/stencil/cash.php",
+data:{type:type},
 success: function(msg){
 layer.closeAll('loading');
 layer.open({
-title:'全站提现记录',
+title:title,
 type: 1,
 area: ['900px', '530px'], 
 content: msg
@@ -1188,6 +1210,122 @@ fixed: false,
 area: ['500px','350px'], 
 content: msg
 });
+
+
+//论坛上传头像
+layui.use(['upload'], function(){
+var upload = layui.upload;
+upload.render({
+elem: '#bbs-avatar',
+url: jinsom.jinsom_ajax_url+'/upload/apply-term.php',
+accept:'file',
+done: function(res, index, upload){
+if(res.code == 1){
+$('#bbs-avatar').attr('src',res.file_url).show();
+$('#apply-bbs-avatar-url').val(res.file_url);
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+}else{
+layer.msg(res.msg);	
+}
+},
+error: function(index, upload){
+layer.msg('上传失败！');
+}
+});
+
+});
+
+layui.use('form', function(){
+var form = layui.form;
+form.render();
+
+//发表
+form.on('select(power_form)', function(data){
+$select_value=parseInt($("#power_form").val());
+if($select_value==6){
+$("#jinsom-publish-power-lv").show();    
+}else{
+$("#jinsom-publish-power-lv").hide();     
+}
+if($select_value==7){
+$("#jinsom-publish-power-honor").show();    
+}else{
+$("#jinsom-publish-power-honor").hide();     
+}
+if($select_value==8){
+$("#jinsom-publish-power-verify").show();    
+}else{
+$("#jinsom-publish-power-verify").hide();     
+}
+});
+
+//回帖
+form.on('select(comment_power)', function(data){
+$select_value=parseInt($("#jinsom-bbs-comment-power").val());
+if($select_value==6){
+$("#jinsom-bbs-comment-power-lv").show();    
+}else{
+$("#jinsom-bbs-comment-power-lv").hide();     
+}
+if($select_value==7){
+$("#jinsom-bbs-comment-power-honor").show();    
+}else{
+$("#jinsom-bbs-comment-power-honor").hide();     
+}
+if($select_value==8){
+$("#jinsom-bbs-comment-power-verify").show();    
+}else{
+$("#jinsom-bbs-comment-power-verify").hide();     
+}
+});
+
+//访问
+form.on('select(visit_power_form)',function(data){
+$select_value=parseInt($("#visit_power_form").val());
+if($select_value==5){
+$("#jinsom-visit-power-pass").show();    
+}else{
+$("#jinsom-visit-power-pass").hide();     
+}
+if($select_value==6){
+$("#jinsom-visit-power-exp").show();    
+}else{
+$("#jinsom-visit-power-exp").hide();     
+}
+if($select_value==12){
+$("#jinsom-visit-power-vip-number").show();    
+}else{
+$("#jinsom-visit-power-vip-number").hide();     
+}
+if($select_value==7){
+$("#jinsom-visit-power-user").show();    
+}else{
+$("#jinsom-visit-power-user").hide();     
+}
+if($select_value==9){
+$("#jinsom-visit-power-honor").show();    
+}else{
+$("#jinsom-visit-power-honor").hide();     
+}
+if($select_value==10){
+$("#jinsom-visit-power-verify").show();    
+}else{
+$("#jinsom-visit-power-verify").hide();     
+}
+if($select_value==11){
+$("#jinsom-visit-power-pay").show();    
+}else{
+$("#jinsom-visit-power-pay").hide();     
+}
+});
+
+}); //form
+
 }
 });	
 }
@@ -1222,6 +1360,9 @@ title="通过";
 title="删除";	
 }
 
+apply_data=$('.jinsom-apply-bbs-content').serialize();
+apply_data+='&ID='+id+'&type='+type;
+
 layer.confirm('你确定要'+title+'吗？',{
 btn: ['确定','取消'],
 btnAlign: 'c',
@@ -1232,7 +1373,7 @@ layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/action/apply-bbs-do.php",
-data:{ID:id,type:type},
+data:apply_data,
 success: function(msg){
 layer.closeAll('loading');
 layer.msg(msg.msg);
@@ -1281,12 +1422,12 @@ content: msg
 
 
 //查看订单
-function jinsom_goods_order_view_form(trade_no){
+function jinsom_goods_order_view_form(ID){
 layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/stencil/order-view.php",
-data:{trade_no:trade_no},
+data:{ID:ID},
 success: function(msg){
 layer.closeAll('loading');
 window.goods_order_view_form=layer.open({
@@ -1304,12 +1445,12 @@ content: msg
 }
 
 //发货表单
-function jinsom_goods_order_send_form(trade_no){
+function jinsom_goods_order_send_form(ID){
 layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/stencil/order-send.php",
-data:{trade_no:trade_no},
+data:{ID:ID},
 success: function(msg){
 layer.closeAll('loading');
 window.goods_order_send_form=layer.open({
@@ -1326,13 +1467,13 @@ content: msg
 }
 
 //发货
-function jinsom_goods_order_send(trade_no){
+function jinsom_goods_order_send(ID){
 content=$('#jinsom-goods-order-send-content').val();
 layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/action/order-send.php",
-data:{content:content,trade_no:trade_no},
+data:{content:content,ID:ID},
 success: function(msg){
 layer.closeAll('loading');
 layer.msg(msg.msg);
@@ -1345,8 +1486,8 @@ layer.close(goods_order_view_form);
 }
 
 
-//删除聊天记录
-function jinsom_goods_order_delete(trade_no){
+//删除订单记录
+function jinsom_goods_order_delete(ID){
 layer.confirm('你确定要删除该订单？',{
 btn: ['确定','取消'],
 btnAlign: 'c',
@@ -1356,11 +1497,11 @@ layer.load(1);
 $.ajax({
 type: "POST",
 url:jinsom.jinsom_ajax_url+"/admin/action/order-delete.php",
-data:{trade_no:trade_no},
+data:{ID:ID},
 success: function(msg){
 layer.closeAll('loading');
 layer.msg(msg.msg);
-$('.order-'+trade_no).remove();
+$('.order-'+ID).remove();
 layer.close(goods_order_view_form);
 }
 });
@@ -1513,3 +1654,424 @@ if(r!=null)return  unescape(r[2]); return null;
 }
 
 
+
+//分享配置数据===单独的option选项
+function jinsom_setting_share(title,type){
+if(!type){
+layer.msg("数据异常！");
+return false;
+}
+layer.msg(title,{
+time:0,
+closeBtn:2,
+btn: ['云共享(公开)','私人备份','查看共享'],
+btnAlign: 'c',
+btn1:function(){
+layer.closeAll();
+layer.prompt({title:'请输入分享备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{content:pass,type:type,share_type:'option',is_open:1},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn2: function(){
+layer.closeAll();
+layer.prompt({title:'请输入私人备份备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{content:pass,type:type,share_type:'option',is_open:0},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn3: function(){
+layer.closeAll();
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/stencil/settings-share-get.php",
+data:{type:type,share_type:'option',post_id:0},
+success: function(msg){
+layer.closeAll();
+layer.open({
+title:'Option数据['+title+']',
+type: 1,
+area: ['300px', '500px'], 
+content: msg
+});
+}
+});
+}
+}
+);
+
+
+}
+
+//分享配置数据 metabox
+function jinsom_setting_share_metabox(post_id){
+type=$('.jinsom-panel-page-templates.jinsom-panel-show').attr('id');
+if(!type){
+layer.msg("该页面模板没有设置选项，请选择其他模板！");
+return false;
+}
+title=$('.jinsom-panel-page-templates.jinsom-panel-show .ui-sortable-handle').text();
+layer.msg(title,{
+time:0,
+closeBtn:2,
+btn: ['云共享(公开)','私人备份','查看共享'],
+btnAlign: 'c',
+btn1:function(){
+layer.closeAll();
+layer.prompt({title:'请输入分享备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{content:pass,type:type,share_type:'metabox',post_id:post_id,is_open:1},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn2: function(){
+layer.closeAll();
+layer.prompt({title:'请输入私人备份备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{content:pass,type:type,share_type:'metabox',post_id:post_id,is_open:0},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn3: function(){
+layer.closeAll();
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/stencil/settings-share-get.php",
+data:{type:type,share_type:'metabox',post_id:post_id},
+success: function(msg){
+layer.closeAll();
+layer.open({
+title:'Metabox数据['+title+']',
+type: 1,
+area: ['300px', '500px'], 
+content: msg
+});
+}
+});
+}
+}
+);
+
+
+}
+
+
+//分享主题总配置数据 options
+function jinsom_setting_share_options(){
+layer.msg('LightSNS主题全部设置选项',{
+time:0,
+closeBtn:2,
+btn: ['云共享(公开)','私人备份','查看共享'],
+btnAlign: 'c',
+btn1:function(){
+layer.closeAll();
+layer.prompt({title:'请输入分享备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{type:'jinsom_options',content:pass,share_type:'options',is_open:1},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn2: function(){
+layer.closeAll();
+layer.prompt({title:'请输入私人备份备注码(可搜索)',formType:2}, function(pass,index){
+layer.close(index);
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share.php",
+data:{type:'jinsom_options',content:pass,share_type:'options',is_open:0},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+}
+});	
+});
+},
+btn3: function(){
+layer.closeAll();
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/stencil/settings-share-get.php",
+data:{type:'jinsom_options',share_type:'options',post_id:0},
+success: function(msg){
+layer.closeAll();
+layer.open({
+title:'LightSNS主题设置选项',
+type: 1,
+area: ['300px', '500px'], 
+content: msg
+});
+}
+});
+}
+}
+);
+
+
+}
+
+
+//查看配置选项
+function jinsom_setting_share_data_read(id){
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share-read.php",
+data:{id:id},
+success: function(msg){
+layer.closeAll('loading');
+layer.open({
+title:'数据详情',
+type: 1,
+skin:'jinsom-settings-share-read-pop',
+area: ['600px', '500px'], 
+content: msg
+});
+}
+});	
+}
+
+
+//导入云设置选项
+function jinsom_setting_share_data_add(id,post_id,share_type){
+layer.confirm('<font style="color:#f00;">导入之后会覆盖你目前的该项设置，你确定？</font>',{
+btnAlign: 'c',
+}, function(){
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/settings-share-add.php",
+data:{id:id,post_id:post_id,share_type:share_type},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+function c(){window.location.reload();}setTimeout(c,1000);
+}
+}
+});	
+});
+}
+
+
+//搜索云设置选项
+function jinsom_setting_share_data_search(type,post_id,share_type){
+key=$('.jinsom-admin-setting-get-form .search input').val();
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/stencil/settings-share-search.php",
+data:{type:type,key:key,post_id:post_id,share_type:share_type},
+success: function(msg){
+layer.closeAll('loading');
+$('.jinsom-admin-setting-get-form .content').html(msg);
+}
+});	
+}
+
+
+//设置数据 域名替换 表单
+function jinsom_setting_domain_replace_form(){
+layer.open({
+title:'设置数据域名批量替换',
+type: 1,
+area: ['500px', '440px'], 
+content: '<div class="jinsom-setting-domain-replace-content">\
+<div class="tips">该功能用于一键替换主题设置数据的旧域名为新域名 (也可以替换文字)<br><font style="color:#f00;">替换之前务必备份主题设置选项+mysql数据库，防止不可预见的风险</font></div>\
+<li><p>旧域名：</p><input type="text" id="jinsom-old-domain"></li>\
+<li><p>新域名：</p><input type="text" id="jinsom-new-domain"></li>\
+<li><input type="checkbox" id="jinsom-replace-is-mysql"> <span>全站替换（WordPress+LightSNS）关联数据表</span></li>\
+<div class="btn opacity" onclick="jinsom_setting_domain_replace()">一键替换</div>\
+</div>'
+});	
+}
+
+
+//提交设置选项替换
+function jinsom_setting_domain_replace(){
+old_str=$('#jinsom-old-domain').val();
+new_str=$('#jinsom-new-domain').val();
+if(!old_str||!new_str){
+layer.msg("请输入新域名/旧域名！");
+return false;
+}
+
+if($('#jinsom-replace-is-mysql').is(':checked')){
+is_sql=1;
+}else{
+is_sql=0;
+}
+
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/domain-replace.php",
+data:{old_str:old_str,new_str:new_str,is_sql:is_sql},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+function c(){window.location.reload();}setTimeout(c,1000);
+}
+}
+});	
+}
+
+
+//给用户发送消息
+function jinsom_admin_send_msg(author_id){
+layer.msg('请选择你需要发送的消息类型', {
+time:0,
+closeBtn:2,
+btn: ['IM消息','邮件消息'],
+btn1: function(index, layero){
+layer.closeAll();
+layer.prompt({title: '请输入你需要发送的IM内容', formType: 2}, function(text, index){
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/send-msg.php",
+data:{author_id:author_id,content:text,type:'im'},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+layer.close(index);
+}
+}
+});	
+});
+},
+btn2: function(index, layero){
+layer.closeAll();
+layer.prompt({title: '请输入你需要发送的邮件内容', formType: 2}, function(text, index){
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/send-msg.php",
+data:{author_id:author_id,content:text,type:'email'},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+layer.close(index);
+}
+}
+});	
+});
+}
+});
+}
+
+//设置为风险用户
+function jinsom_blacklist_setting(author_id){
+layer.confirm('确定要将该用户设置为风险用户？',{
+btnAlign: 'c',
+btn: ['确定','按错了'],
+}, function(){
+layer.closeAll();
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/blacklist-user.php",
+data:{author_id:author_id},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+$('#user-'+author_id+' .nickname a').text('已重置-'+author_id);
+layer.close(index);
+}
+}
+});
+});
+}
+
+//清空网站的货币
+function  jinsom_clear_currency(type){
+if(type=='credit'){
+title='你确定要清空全站所有用户的金币吗？<br><font style="color:#f00;">这是一个不可逆的操作，请及时备份数据！</font>';
+}else if(type=='extcredits'){
+title='你确定要清空全站所有用户的积分吗？<br><font style="color:#f00;">这是一个不可逆的操作，请及时备份数据！</font>';
+}else{
+title='你确定要清空全站所有用户的余额吗？<br><font style="color:#f00;">这是一个不可逆的操作，请及时备份数据！</font>';
+}
+layer.confirm(title,{
+btnAlign: 'c',
+}, function(){
+layer.closeAll();
+layer.prompt({title: '输入"确定清空"，并点击确认', formType: 0}, function(pass, index){
+layer.close(index);
+
+if(pass=='确定清空'){
+
+layer.load(1);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/admin/action/clear-currency.php",
+data:{type:type},
+success: function(msg){
+layer.closeAll('loading');
+layer.msg(msg.msg);
+if(msg.code==1){
+function c(){window.location.reload();}setTimeout(c,1000);
+}
+}
+});
+
+}else{
+layer.msg('已经取消操作');
+}
+
+});
+
+
+
+
+});
+}

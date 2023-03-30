@@ -24,7 +24,7 @@ header_height=$('.jinsom-header').height();//头部高度
 
 //右侧、个人主页左侧工具悬浮
 if($('.jinsom-bbs-content-header-fixed').length==0){
-$('.jinsom-content-right,.jinsom-member-left,.jinsom-publish-single-form .left').JinsomSidebarFixed({additionalMarginTop: 50});
+$('.jinsom-content-right,.jinsom-member-left,.jinsom-publish-single-form .left,.jinsom-publish-right').JinsomSidebarFixed({additionalMarginTop: 50});
 }
 
 
@@ -377,7 +377,7 @@ window.location.reload();
 
 
 //点击隐藏图片
-$(document).on('click','.jinsom-post-images-list a.blur',function(){
+$('.jinsom-main-content').on('click','.jinsom-post-images-list a.blur',function(){
 $(this).parents('.jinsom-post-images-list').prev().children('.jinsom-btn').click();
 });
 

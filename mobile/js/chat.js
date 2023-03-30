@@ -38,18 +38,17 @@ $('.jinsom-chat-list-content').scrollTop($('.jinsom-chat-list-content')[0].scrol
 if(msg.code==3){
 function c(){myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page/mywallet/recharge-vip.php'});}setTimeout(c,1500);	
 }
-}else if(msg.code==1){//聊天隐私
+}else if(msg.code==1){//发送成功
 
 ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat","notice_user_id":"'+author_id+'","do_user_id":"'+msg.do_user_id+'","do_user_name":"'+jinsom.nickname_base+'","content":"'+msg.content+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'"}');
 
-if($('#jinsom-chat-user-'+author_id).length>0){//当前会话置顶
-current_user_li=$('#jinsom-chat-user-'+author_id);
-$('.jinsom-chat-user-'+author_id).remove();
-$('#jinsom-chat-tab-recently .jinsom-group-top-br').after(current_user_li);
-$('.jinsom-chat-user-'+author_id+' .desc').text(content);
-}
+//更新最近列表
+$('#jinsom-chat-user-'+author_id).remove();
+$('.jinsom-group-top-br').after(msg.notice_list);
 
-if(msg.im_privacy==1){
+
+
+if(msg.im_privacy==1){//聊天隐私
 $('.jinsom-chat-list').append('<p class="jinsom-chat-message-tips error"><span>'+msg.im_privacy_tips+'</span></p>');
 $('.jinsom-chat-list-content').scrollTop($('.jinsom-chat-list-content')[0].scrollHeight);
 }
@@ -64,14 +63,14 @@ $('.jinsom-chat-list-content').scrollTop($('.jinsom-chat-list-content')[0].scrol
 //打开单对单聊天
 function jinsom_open_user_chat(author_id,obj){
 if(!jinsom.is_login){
-myApp.loginScreen();  
+jinsom_login_page();  
 return false;
 }
 
-if(author_id==jinsom.user_id){
-layer.open({content:'你不能给自己发起聊天！',skin:'msg',time:2});
-return false;	
-}
+// if(author_id==jinsom.user_id){
+// layer.open({content:'你不能给自己发起聊天！',skin:'msg',time:2});
+// return false;	
+// }
 
 
 if($('[data-page="chat-one"]').length>0){
@@ -90,7 +89,7 @@ myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page
 //打开群聊
 function jinsom_open_group_chat(bbs_id){
 if(!jinsom.is_login){
-myApp.loginScreen();  
+jinsom_login_page();  
 return false;
 }
 if($('[data-page="chat-group"]').length>0){
@@ -105,7 +104,7 @@ $('#jinsom-chat-group-'+bbs_id+' .tips').remove();
 //打开购买入场特效界面
 function jinsom_open_group_chat_join_buy(){
 if(!jinsom.is_login){
-myApp.loginScreen();  
+jinsom_login_page();  
 return false;
 }
 myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page/chat-group-join-buy.php'});
@@ -201,11 +200,11 @@ $('.jinsom-chat-group-list .ing').first().removeClass('ing');
 $('.jinsom-chat-group-list .ing').first().attr('id','jinsom-chat-content-'+msg.id);
 $('.jinsom-chat-group-list .ing').first().find('.jinsom-chat-message-list-content').attr('onclick','jinsom_chat_content_more('+msg.id+','+jinsom.user_id+','+bbs_id+')');
 $('.jinsom-chat-group-list .ing').first().removeClass('ing');
-ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","content":"'+msg.id+'"}');
+ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","content":"'+msg.id+'","notice_user_name":"'+jinsom.nickname_base+'"}');
 
 //机器人
 if(msg.rebot_name){
-ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.rebot_user_id+'","bbs_id":"'+bbs_id+'","message":"'+jinsom_htmlspecialchars_decode(msg.rebot_message)+'","do_user_avatar":"'+msg.rebot_avatar+'","do_user_name":"'+msg.rebot_name+'","content":"'+msg.rebot_insert_id+'"}');
+ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.rebot_user_id+'","bbs_id":"'+bbs_id+'","message":"'+jinsom_htmlspecialchars_decode(msg.rebot_message)+'","do_user_avatar":"'+msg.rebot_avatar+'","do_user_name":"'+msg.rebot_name+'","content":"'+msg.rebot_insert_id+'","notice_user_name":"'+msg.rebot_name_base+'"}');
 }
 
 }
@@ -220,7 +219,7 @@ ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+m
 //加入群聊
 function jinsom_join_group_chat(bbs_id,obj){
 if(!jinsom.is_login){
-myApp.loginScreen();  
+jinsom_login_page();  
 return false;
 }
 if(jinsom.is_black){
@@ -237,7 +236,7 @@ jinsom_open_group_chat(bbs_id);
 }else if(msg==2){
 layer.open({content:'请先关注'+jinsom.bbs_name+'才允许加入群聊！',skin:'msg',time:2});
 }else if(msg==3){
-myApp.loginScreen();
+jinsom_login_page();
 }
 }
 });	

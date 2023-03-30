@@ -32,8 +32,12 @@ body{
 .jinsom-icon {
     font-size: 6vw;
 }
+iconpark-icon {
+    font-size: 6vw;
+}
 input{
     -webkit-appearance: none;
+    appearance: none;
     font-size: 4vw;
 }
 li{
@@ -114,16 +118,24 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     font-size: 5vw;
 }
-
+.toolbar a iconpark-icon {
+    font-size: 5vw;
+    margin-top: 0.8vw;
+}
 
 /*loading加载*/
 .jinsom-load {padding: 2vw;}
 .jinsom-loading{ position:relative;width:12vw;height:12vw;margin: auto;text-align: center;}
 .jinsom-loading i{ display:block;width:12vw;height:12vw; position:absolute;border-radius:50%; background:#555;left:0;top:0; opacity:0;}
-.jinsom-loading i:nth-child(1){-webkit-animation:jinsom-loading 1s linear 0s infinite}
-.jinsom-loading i:nth-child(2){-webkit-animation:jinsom-loading 1s linear .2s infinite}
-.jinsom-loading i:nth-child(3){-webkit-animation:jinsom-loading 1s linear .4s infinite}
+.jinsom-loading i:nth-child(1){-webkit-animation:jinsom-loading 1s linear 0s infinite;animation:jinsom-loading 1s linear 0s infinite}
+.jinsom-loading i:nth-child(2){-webkit-animation:jinsom-loading 1s linear .2s infinite;animation:jinsom-loading 1s linear .2s infinite}
+.jinsom-loading i:nth-child(3){-webkit-animation:jinsom-loading 1s linear .4s infinite;animation:jinsom-loading 1s linear .4s infinite}
 @-webkit-keyframes jinsom-loading{
+0%{ transform:scale(0); opacity:0;}
+50%{ transform:scale(0); opacity:1;}
+100%{ transform:scale(1); opacity:0;}
+}
+@keyframes jinsom-loading{
 0%{ transform:scale(0); opacity:0;}
 50%{ transform:scale(0); opacity:1;}
 100%{ transform:scale(1); opacity:0;}
@@ -162,7 +174,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #424242;
 }
 @keyframes loading-post {
-0 {
+0% {
     transform:translate(0,0)
 }
 50% {
@@ -205,7 +217,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 4vw;
     clear: both;
 }
-.jinsom-empty-page i {
+.jinsom-empty-page i,.jinsom-empty-page iconpark-icon {
     font-size: 8vw;
 }
 .jinsom-empty-page .title p{
@@ -384,7 +396,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .navbar .right .follow {
     line-height: 7vw;
-    font-size: 3vw;
+    font-size: 3.5vw;
     position: absolute;
     right: 0;
     top: 2vw;
@@ -395,7 +407,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 4vw;
 }
 .navbar .right .follow i {
-    font-size: 4vw;
+    font-size: 4.5vw;
     vertical-align: -0.5vw;
 }
 .navbar .right .follow.had {
@@ -612,12 +624,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-.jinsom-chat-tab {
+.jinsom-chat-tab,.jinsom-content-manage-tab {
     color: #6d6d72;
     display: flex;
     width: 100%;
 }
-.jinsom-chat-tab a {
+.jinsom-chat-tab a,.jinsom-content-manage-tab a {
     flex: 1;
     position: relative;
     text-align: center;
@@ -626,11 +638,11 @@ h1, h2, h3, h4, h5, h6 {
     color: #555;
     display: inline-block;
 }
-.jinsom-chat-tab a.active {
+.jinsom-chat-tab a.active,.jinsom-content-manage-tab a.active {
     opacity: 1;
     color: #46c47c;
 }
-.jinsom-chat-tab a.active:after {
+.jinsom-chat-tab a.active:after,.jinsom-content-manage-tab a.active:after {
     position: absolute;
     left: 45%;
     bottom: 0;
@@ -762,6 +774,16 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     width: 17vw;
 }
+.jinsom-chat-user-list li .item-media n {
+    position: absolute;
+    font-size: 3vw;
+    background-color: #f85959;
+    color: #fff;
+    padding: 0.2vw 0.8vw;
+    top: 16px;
+    right: initial;
+    border-radius: 2vw 0vw;
+}
 .jinsom-chat-user-list li .item-media .jinsom-verify {
     bottom: 3.5vw;
     right: 3.5vw;
@@ -786,6 +808,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 .jinsom-mine-page li i {
     font-size: 5.5vw;
+}
+.jinsom-mine-page li iconpark-icon {
+    font-size: 5.5vw;
+}
+.jinsom-mine-page .list li iconpark-icon {
+    margin-top: 1.4vw;
 }
 .jinsom-mine-page li.profile .item-media i, .jinsom-mine-page li.style .item-media i {
     vertical-align: -2vw;
@@ -880,7 +908,9 @@ h1, h2, h3, h4, h5, h6 {
     height: 2vw;
     margin: 0;
 }
-
+.jinsom-mine-page .jinsom-load-post {
+    margin-top: 10vw;
+}
 
 
 
@@ -908,7 +938,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 /*发表*/
-.jinsom-footer-toolbar .publish i {
+.jinsom-footer-toolbar .publish i,.jinsom-footer-toolbar .publish iconpark-icon {
     font-size: 11vw;
     line-height: 12vw;
     color: #46c47c;
@@ -963,6 +993,18 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     margin: 0 0 5vw;
     opacity: 0.8;
+}
+.jinsom-login-input-form .phone_prefix {
+    opacity: 0.8;
+    margin: 0 0 5vw;
+}
+.jinsom-login-input-form .phone_prefix select {
+    border-radius: 10vw;
+    width: 100%;
+    padding: 0 3vw;
+    height: 11vw;
+    font-size: 4vw;
+    color: #666;
 }
 .jinsom-mobile-login-form-btn>div {
     position: relative;
@@ -1047,15 +1089,15 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 4vw;
 }
 .jinsom-social-login li {
-    float: left;
     width: 25%;
     text-align: center;
     font-size: 3.5vw;
     margin-bottom: 4vw;
     box-sizing: border-box;
     border-radius: 1vw;
+    display: inline-block;
 }
-.jinsom-social-login li i {
+.jinsom-social-login li i,.jinsom-social-login li iconpark-icon {
     font-size: 10vw;
 }
 .jinsom-social-login li p {
@@ -1206,10 +1248,8 @@ display: none !important;
     margin-right: 1vw;
     vertical-align: 0.6vw !important;
 }
-.jinsom-post-words .content h1 .sticky-member:before, .jinsom-post-single h1 .sticky-member:before{
-    content: '顶';
-}
-.jinsom-post-words .content h1 .type, .jinsom-single h1 .type {
+
+.jinsom-post-words .content h1 span, .jinsom-single h1 span {
     padding: 0.5vw 1.5vw;
     border-radius: 1vw;
     color: #fff;
@@ -1222,7 +1262,7 @@ display: none !important;
     font-size: 3.5vw;
 }
 /*有图*/
-.jinsom-bbs-post-type-img i {
+.jinsom-bbs-post-type-img i,.jinsom-bbs-post-type-file i {
     font-size: 4vw;
     color: #999;
 }
@@ -1452,6 +1492,9 @@ display: none !important;
     max-width: 100%;
     height: auto;
 }
+.jinsom-hide-content li {
+    list-style: inherit;
+}
 .jinsom-tips {
     text-align: center;
     margin: 0 4vw 4vw;
@@ -1616,6 +1659,7 @@ display: none !important;
     display: inline-block;
     border-radius: 1vw;
     background-color: #f8f8f8;
+    background-repeat: no-repeat;
 }
 .jinsom-post-single-thum>div:last-child{
     margin-right:0; 
@@ -1890,6 +1934,19 @@ display: none !important;
     border-radius: 1vw;
     resize: none;
     max-height: 58vw;
+    display: block;
+}
+.jinsom-comment-textarea-bar {
+    margin: 0 4vw 0;
+    text-align: right;
+}
+.jinsom-comment-textarea-bar i {
+    color: #999;
+    width: 10vw;
+    text-align: center;
+    height: 10vw;
+    line-height: 10vw;
+    display: inline-block;
 }
 
 
@@ -2103,13 +2160,15 @@ display: none !important;
     position: absolute;
     right: 4vw;
     color: #999;
+    top: 4vw;
+    line-height: 10vw;
 }
 .jinsom-single-comment-list>div .up.on {
     color: #f56b41;
 }
 .jinsom-single-comment-list>div .up i {
     font-size: 5vw;
-    margin-right: 1vw;
+    margin-left: 1vw;
 }
 .jinsom-single-comment-list>div .avatarimg {
     float: left;
@@ -2332,6 +2391,12 @@ display: none !important;
 .jinsom-member-header .info p {
     margin: 0;
 }
+.jinsom-member-header .member-liang {
+    margin-bottom: 3vw;
+}
+.jinsom-member-header .member-liang>span {
+    padding: 0.5vw 3vw;
+}
 .jinsom-member-content {
     background-color: rgb(248 248 248 / 0.8);
 }
@@ -2395,7 +2460,7 @@ display: none !important;
     border-right: 1px solid #f1efef;
     color: #999;
 }
-.jinsom-member-other-toolbar .chat i {
+.jinsom-member-other-toolbar .chat i,.jinsom-member-other-toolbar .blacklist i {
     font-size: 5vw;
 }
 .jinsom-member-other-toolbar .gift {
@@ -2405,7 +2470,13 @@ display: none !important;
     vertical-align: -0.2vw;
     font-size: 5.8vw;
 }
-
+.jinsom-member-other-toolbar .blacklist {
+    border-left: 1px solid #f1efef;
+    color: #f00;
+}
+.jinsom-member-other-toolbar .blacklist i {
+    margin-right: 1vw;
+}
 
 
 /*音乐播放器*/
@@ -2626,6 +2697,7 @@ display: none !important;
     color: #fff;
     border-radius: 10vw;
     -webkit-appearance: none;
+    appearance: none;
 }
 .jinsom-get-code.no {
     background-color: #aaa !important;
@@ -2638,6 +2710,7 @@ display: none !important;
 }
 .jinsom-reg-doc input {
     -webkit-appearance:checkbox;
+    appearance:checkbox;
     vertical-align: -0.5vw;
 }
 .jinsom-reg-doc a {
@@ -3220,6 +3293,10 @@ display: none !important;
 .jinsom-publish-type-form .bottom li span i {
     font-size: 5vw;
 }
+.jinsom-publish-type-form .bottom li span iconpark-icon {
+    font-size: 5vw;
+    margin-top: 1.5vw;
+}
 .jinsom-publish-type-form .close {
     bottom: 0;
     position: absolute;
@@ -3285,13 +3362,33 @@ display: none !important;
     white-space: nowrap;
     width: 60vw;
 }
-.jinsom-file-download .info .pass {
-    font-size: 3.5vw;
-    color: #999;
+.jinsom-file-download .info .pass,.jinsom-file-download .info .desc {
+    font-size: 3vw;
+    color: #888;
     margin-top: 1vw;
     overflow: hidden;
     max-height: 10vw;
     line-height: 5vw;
+}
+.jinsom-file-download .info .desc {
+    color: #03a9f4;
+}
+.jinsom-file-download .info .tips {
+    font-size: 3vw;
+    color: #888;
+}
+.jinsom-file-download .info .tips em {
+    font-style: normal;
+    margin-right: 2px;
+}
+.jinsom-file-download .info .tips em.download-note {
+    cursor: pointer;
+    color: var(--jinsom-color);
+    margin-left: 2vw;
+    position: relative;
+}
+.jinsom-file-download .info .tips em font {
+    color: #ff7c7c;
 }
 .jinsom-file-download .btn {
     display: block;
@@ -3317,7 +3414,7 @@ display: none !important;
 .jinsom-bbs-activity-btn,.jinsom-btn {
     text-align: center;
     padding: 2vw;
-    background-color: #5fb878;
+    background-color: var(--jinsom-color);
     color: #fff;
     margin: 12px auto;
     cursor: pointer;
@@ -3457,6 +3554,7 @@ display: none !important;
     margin: 0;
     margin-right: 2vw;
     -webkit-appearance: checkbox;
+    appearance: checkbox;
 }
 
 
@@ -3537,7 +3635,6 @@ display: none !important;
     line-height: 33vw;
     text-align: center;
     font-family: 宋体;
-    display: inline-block;
     cursor: pointer;
     overflow: hidden;
     position: relative;
@@ -3636,7 +3733,6 @@ display: none !important;
     padding: 0.5vw 2vw;
     border-radius: 4vw;
     margin-right: 2vw;
-    display: inline-block;
     margin-top: 2vw;
     float: left;
     font-size: 3.5vw;
@@ -3890,7 +3986,7 @@ display: none !important;
     float: left;
     width: 25%;
     text-align: center;
-    margin-bottom: 2vw;
+    margin-bottom: 4vw;
 }
 .jinsom-find-menu li img {
     width: 12vw;
@@ -3943,6 +4039,7 @@ display: none !important;
     margin-right: 2vw;
     margin-top: 3vw;
     margin-bottom: 2vw;
+    display: inline-block;
 }
 .jinsom-find-box.bbs.a .content li:nth-child(5n) {
     margin-right: 0;
@@ -4059,7 +4156,6 @@ display: none !important;
 }
 .jinsom-find-box.bbs.d .content li {
     float: inherit;
-    display: inline-block;
     width: 30vw;
     padding: 4vw 2vw;
     background-color: #f8f8f8;
@@ -4155,6 +4251,7 @@ display: none !important;
     margin-top: 1.6vw;
     height: 14vw;
     position: relative;
+    display: inline-block;
 }
 .jinsom-find-box.user .content li:nth-child(6n) {
     margin-right: 0;
@@ -4242,7 +4339,6 @@ display: none !important;
 }
 .jinsom-find-box.user.d .content li {
     float: inherit;
-    display: inline-block;
     width: 30vw;
     padding: 4vw 2vw;
     background-color: #f8f8f8;
@@ -4324,13 +4420,28 @@ display: none !important;
     color: #888;
     font-size: 3.5vw;
 }
+.jinsom-mywallet-box.extcredits {
+    display: flex;
+    align-items: center;
+}
+.jinsom-mywallet-box.extcredits .name {
+    flex: 1;
+}
+.jinsom-mywallet-box.extcredits .number {
+    font-size: 7vw;
+    flex: 1;
+    text-align: right;
+}
 .jinsom-mywallet-box .content li {
     padding-top: 3vw;
-    float: left;
+    display: inline-block;
     width: 25%;
     text-align: center;
 }
 .jinsom-mywallet-box .content li i {
+    font-size: 8vw;
+}
+.jinsom-mywallet-box .content li iconpark-icon {
     font-size: 8vw;
 }
 .jinsom-mywallet-box .content li p {
@@ -4427,19 +4538,9 @@ display: none !important;
 .jinsom-recharge-type li:nth-child(2n) {
     margin-right: 0;
 }
-.jinsom-recharge-type li>i {
+.jinsom-recharge-type li .icon i {
     margin-right: 2vw;
     vertical-align: -0.5vw;
-}
-.jinsom-recharge-type li>i.jinsom-weixinzhifu {
-    color: #41b035;
-}
-.jinsom-recharge-type li>i.jinsom-zhifubaozhifu {
-    font-size: 6vw;
-    color: #00a7ff;
-}
-.jinsom-recharge-type li>i.jinsom-qiamizhifu {
-    color: #666;
 }
 .jinsom-recharge-btn {
     margin: 0 4vw 6vw;
@@ -4959,12 +5060,12 @@ display: none !important;
 
 
 /*卡密兑换*/
-.jinsom-key-recharge-content {
+.jinsom-key-recharge-content,.jinsom-transfer-content {
     background-color: #fff;
     padding: 4vw;
     margin-top: 4vw;
 }
-.jinsom-key-recharge-content input {
+.jinsom-key-recharge-content input,.jinsom-transfer-content input,.jinsom-transfer-content textarea {
     box-sizing: border-box;
     width: 100%;
     padding: 2vw;
@@ -4973,17 +5074,93 @@ display: none !important;
     font-size: 4vw;
     line-height: 7vw;
 }
-.jinsom-key-recharge-content .info {
+.jinsom-key-recharge-content .info,.jinsom-transfer-content .tips {
     margin-top: 4vw;
     color: #999;
 }
-.jinsom-key-recharge-content .btn {
+.jinsom-key-recharge-content .btn,.jinsom-transfer-content .btn {
     background-color: var(--jinsom-color);
     text-align: center;
     color: #fff;
     padding: 2.5vw;
     border-radius: 1vw;
     margin-top: 4vw;
+}
+
+.jinsom-transfer-content .type>m.on {
+    border: 1px solid #5fb878;
+}
+.jinsom-transfer-content .type>m {
+    border: 1px solid #e3e3e3;
+    padding: 2vw 4vw;
+    cursor: pointer;
+    color: #888;
+    margin-right: 3vw;
+    border-radius: 1vw;
+    position: relative;
+}
+.jinsom-transfer-content .type>m.on n {
+    position: absolute;
+    right: -1px;
+    width: 0;
+    height: 0;
+    border-top: 6vw solid #5FB878;
+    border-left: 6vw solid transparent;
+    top: -1px;
+    display: block;
+}
+.jinsom-transfer-content .type>m n {
+    display: none;
+}
+.jinsom-transfer-content .type>m n i {
+    position: absolute;
+    top: -6vw;
+    right: 0;
+    color: #ffffff;
+    font-size: 3vw;
+}
+.jinsom-transfer-content>div {
+    margin-bottom: 8vw;
+}
+.jinsom-transfer-content .author {
+    position: relative;
+}
+.jinsom-transfer-content .author a {
+    display: flex;
+    height: 14vw;
+}
+.jinsom-transfer-content .author a .img {
+    position: relative;
+    margin-right: 3vw;
+}
+.jinsom-transfer-content .author a .img img {
+    border-radius: 100%;
+}
+.jinsom-transfer-content .author a .img i {
+    right: 0;
+    bottom: 0;
+}
+.jinsom-transfer-content .author a .info {
+    flex: 1;
+    line-height: 7vw;
+}
+.jinsom-transfer-content .author a .info .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.jinsom-transfer-content .author a .info .desc {
+    font-size: 3vw;
+    color: #999;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.jinsom-transfer-content .tips span {
+    display: block;
+}
+.jinsom-transfer-content .tips .transfer-money,.jinsom-transfer-content .tips .transfer-extcredits {
+    display: none;
 }
 
 /*账单*/
@@ -5051,6 +5228,10 @@ display: none !important;
     margin-right: 2vw;
     border-radius: 1vw 1px 1px 1vw;
     margin-bottom: 2vw;
+    overflow: hidden;
+}
+.jinsom-single-topic-list li>a {
+    display: flex;
 }
 .jinsom-single-topic-list li img {
     width: 8vw;
@@ -5079,21 +5260,27 @@ display: none !important;
     width: 35vw;
     display: inline-block;
     margin-right: 2vw;
-    height: 22vw;
     position: relative;
+    height: 35vw;
+    overflow: hidden;
+}
+.jinsom-single-video-lists li a {
+    display: inline-block;
+    width: 100%;
 }
 .jinsom-single-video-lists li img {
     width: 100%;
     height: 22vw;
     object-fit: cover;
     border-radius: 1vw;
+    display: block;
 }
 .jinsom-single-video-lists li p {
     font-size: 3.5vw;
     white-space: normal;
     height: 9vw;
     overflow: hidden;
-    line-height: 5vw;
+    margin-top: 1vw;
 }
 .jinsom-single-video-lists li>i {
     font-size: 3vw;
@@ -5115,45 +5302,31 @@ display: none !important;
 
 
 /*置顶推荐图标*/
-.jinsom-post-words .content h1 .sticky, .jinsom-post-single h1 .sticky, .jinsom-post-words .content h1 .sticky-member,.jinsom-post-single h1 .sticky-member{
-    padding: 0.5vw 1.5vw;
-    border-radius: 1vw;
+.jinsom-post-words .content h1 .sticky, .jinsom-post-single h1 .sticky, .jinsom-post-words .content h1 .sticky-member,.jinsom-post-single h1 .sticky-member,.jinsom-single h1 .sticky{
     background-color: #1E9FFF;
-    color: #fff;
-    font-size: 3vw;
-    vertical-align: 0.3vw;
 }
-.jinsom-post-words .header .info .name .commend, .jinsom-post-words .content h1 .commend, .jinsom-post-single h1 .commend {
-    padding: 0.5vw 1vw;
-    border-radius: 1vw;
+.jinsom-post-words .header .info .name .commend, .jinsom-post-words .content h1 .commend, .jinsom-post-single h1 .commend,.jinsom-single h1 .commend {
     background-color: #fc3274;
-    color: #fff;
-    margin-left: 2vw;
-    font-size: 3vw;
-    vertical-align: 0.3vw;
 }
-.jinsom-post-words .content h1 .sticky, .jinsom-post-words .content h1 .commend, .jinsom-post-single h1 .sticky, .jinsom-post-single h1 .commend{
-    margin-left:0vw;
-    margin-right:1vw;  
-    vertical-align: 0.6vw;
-}
-.jinsom-single h1 .sticky, .jinsom-single h1 .commend{
+.jinsom-single h1 span,.jinsom-post-single h1 span{
     padding: 0.5vw 1.5vw;
     border-radius: 1vw;
-    background-color: #1E9FFF;
     color: #fff;
     font-size: 3.5vw;
     margin-right:1vw;  
     vertical-align: 0.6vw;
 }
-.jinsom-single h1 .commend{
-    background-color: #F44336;
+.jinsom-post-words .content h1 .sticky-member:before, .jinsom-post-single h1 .sticky-member:before,.jinsom-bbs-post-type-up.member:before{
+    content: '主页置顶';
 }
-h1 .sticky:before,.jinsom-bbs-commend-show li .up:before{
+h1 .sticky:before,.jinsom-bbs-commend-show li .up:before,.jinsom-bbs-post-type-up:before{
     content: "顶";
 }
 h1 .commend:before{
     content: "荐";
+}
+.jinsom-bbs-post-type-nice:before{
+    content: "精";
 }
 
 /*我关注的论坛*/
@@ -5385,6 +5558,11 @@ h1 .commend:before{
 .jinsom-setting-box li .title {
     flex: 1;
 }
+.jinsom-setting-box li.liang .value img {
+    width: 40px;
+    height: auto;
+    margin-left: 2vw;
+}
 .jinsom-setting-box li .value img {
     width: 18vw;
     height: 18vw;
@@ -5395,7 +5573,7 @@ h1 .commend:before{
     padding: 0px 1vw;
     border-radius: 2px;
     color: #fff;
-    margin-right: 2vw;
+    margin-left: 2vw;
     font-size: 3vw;
 }
 .jinsom-setting-box li.avatarimg .value {
@@ -5430,6 +5608,7 @@ h1 .commend:before{
 }
 .jinsom-setting-box select {
     -webkit-appearance: none;
+    appearance: none;
     background-color: #fff;
     border: none;
     color: #999;
@@ -5639,6 +5818,15 @@ h1 .commend:before{
 .jinsom-search-user-list li:last-child .info {
     border-bottom: none;
 }
+.jinsom-search-user-list li.liang .name a {
+    display: flex;
+    align-items: center;
+}
+.jinsom-search-user-list li.liang .name img {
+    width: 40px;
+    height: auto;
+    margin-left: 1vw;
+}
 .jinsom-search-user-list h1 {
     font-size: 3.5vw;
     font-weight: normal;
@@ -5676,6 +5864,9 @@ h1 .commend:before{
 }
 .jinsom-right-bar li a {
     color: #fff;
+}
+.jinsom-right-bar li iconpark-icon {
+    margin-top: 3vw;
 }
 
 /*话题页面*/
@@ -6608,8 +6799,8 @@ h1 .commend:before{
 .jinsom-bbs-list-lattice .title {
     overflow: hidden;
     height: 11vw;
-    display: flex;
-    align-items: center;
+/*    display: flex;
+    align-items: center;*/
 }
 .jinsom-bbs-list-lattice:nth-child(2n) {
     margin-right: 0;
@@ -6802,6 +6993,7 @@ h1 .commend:before{
 .jinsom-black-house-box li .time {
     color: #FF5722;
     font-size: 3vw;
+    margin: 1vw 0;
 }
 .jinsom-black-house-box .content li .time.black {
     color: #000;
@@ -7107,6 +7299,7 @@ h1 .commend:before{
     margin: 0;
     margin-right: 2vw;
     -webkit-appearance: checkbox;
+    appearance: checkbox;
 }
 
 
@@ -7296,6 +7489,7 @@ h1 .commend:before{
     line-height: 6vw;
     font-size: 4vw;
     -webkit-appearance: none;
+    appearance: none;
 }
 .jinsom-publish-redbag-form .img-list {
     overflow-x: scroll;
@@ -7344,6 +7538,9 @@ h1 .commend:before{
 
 .jinsom-get-redbag-content .header .userinfo>a {
     position: relative;
+    width: 18vw;
+    height: 18vw;
+    display: inline-block;
 }
 .jinsom-get-redbag-content .header .userinfo>a>i {
     bottom: 0.5vw;
@@ -7460,6 +7657,17 @@ h1 .commend:before{
 }
 .jinsom-setting-update-phone-email-input.question .code input {
     margin: 0;
+}
+.jinsom-setting-update-phone-email-input .phone_prefix select {
+    margin-bottom: 4vw;
+    background-color: #f6f6f6;
+    width: 100%;
+    border: 1px solid #f1f1f1;
+    border-radius: 1vw;
+    height: 12vw;
+    font-size: 4vw;
+    color: #666;
+    padding: 0 3vw;
 }
 
 /*案例页面*/
@@ -7604,12 +7812,12 @@ h1 .commend:before{
     color: #7A8F9A;
 }
 .jinsom-task-form-content ul li .right .number m {
-    color: #4ACA6D;
+    color: var(--jinsom-color);
 }
 .jinsom-task-form-content ul li .right .status {
     padding: 1vw 2vw;
-    border: 1px solid #46c47c;
-    color: #46c47c;
+    border: 1px solid var(--jinsom-color);
+    color: var(--jinsom-color);
     border-radius: 20px;
     text-align: center;
     margin-top: 4vw;
@@ -7619,8 +7827,11 @@ h1 .commend:before{
     float: right;
     width: 15vw;
 }
+.jinsom-task-form-content ul li .right .status a{
+    color: var(--jinsom-color);
+}
 .jinsom-task-form-content ul li .right .status.on {
-    background-color: #46c47c;
+    background-color: var(--jinsom-color);
     color: #fff;
 }
 .jinsom-task-form-content ul li .right .status.had {
@@ -7740,8 +7951,8 @@ h1 .commend:before{
 
 
 .jinsom-reward-bg,.jinsom-mobile-login-form-btn .jinsom-login-btn,.jinsom-login-input-form p.code .jinsom-get-code,.jinsom-login-input-form p.code a,.jinsom-cash-btn,li.jinsom-mine-no-login{background:var(--jinsom-color);}
-.jinsom-home-menu li.on,.jinsom-video-special-menu li.on,.jinsom-member-menu li.on,.jinsom-topic-menu li.on,.jinsom-chat-tab a.active,.tabbar a.active,.jinsom-footer-toolbar .publish i,.jinsom-bbs-publish-icon i,.jinsom-refresh-success,.toolbar-inner .right a,.jinsom-publish-power-form li .select,.jinsom-bbs-menu li.on,.jinsom-bbs-tab-post-header>li.on,.jinsom-single-comment>.header li.on{color:var(--jinsom-color);}
-.jinsom-home-menu li.on:after,.jinsom-video-special-menu li.on:after,.jinsom-member-menu li.on:after,.jinsom-chat-tab a.active:after,.jinsom-topic-menu li.on:after,.jinsom-find-box .header>span,.jinsom-single-comment>.header li.on:after{border-color:var(--jinsom-color);}
+.jinsom-home-menu li.on,.jinsom-video-special-menu li.on,.jinsom-member-menu li.on,.jinsom-topic-menu li.on,.jinsom-chat-tab a.active,.jinsom-content-manage-tab a.active,.tabbar a.active,.jinsom-footer-toolbar .publish i,.jinsom-footer-toolbar .publish iconpark-icon,.jinsom-bbs-publish-icon i,.jinsom-refresh-success,.toolbar-inner .right a,.jinsom-publish-power-form li .select,.jinsom-bbs-menu li.on,.jinsom-bbs-tab-post-header>li.on,.jinsom-single-comment>.header li.on{color:var(--jinsom-color);}
+.jinsom-home-menu li.on:after,.jinsom-video-special-menu li.on:after,.jinsom-member-menu li.on:after,.jinsom-chat-tab a.active:after,.jinsom-content-manage-tab a.active:after,.jinsom-topic-menu li.on:after,.jinsom-find-box .header>span,.jinsom-single-comment>.header li.on:after{border-color:var(--jinsom-color);}
 .navbar-inner{background:var(--jinsom-navbar-bg-color);}
 .navbar-inner>div,.navbar-inner>div>a{color:var(--jinsom-navbar-text-color);}
 
@@ -8047,22 +8258,6 @@ h1 .commend:before{
     margin: 0;
     max-height: inherit;
 }
-.jinsom-comment-content-main {
-    position: relative;
-}
-.jinsom-comment-content-main>i {
-    position: absolute;
-    right: 5vw;
-    bottom: 2vw;
-    color: #999;
-    width: 10vw;
-    text-align: center;
-    height: 10vw;
-    line-height: 10vw;
-}
-.jinsom-comment-content-main>i.aite {
-    right: 15vw;
-}
 .jinsom-smile-form {
     height: 50vh;
     box-sizing: border-box !important;
@@ -8178,6 +8373,8 @@ h1 .commend:before{
     border-radius: 1vw;
     border: 1px solid #f3f3f3;
     padding: 2vw;
+    width: 32vw;
+    height: 32vw;
 }
 .jinsom-add-content-playbill {
     margin: 6vw 4vw 4vw;
@@ -8187,7 +8384,7 @@ h1 .commend:before{
     color: #fff;
     border-radius: 1vw;
 }
-.jinsom-content-playbill>img {
+.jinsom-content-playbill>a img {
     width: 100%;
     padding: 2vw;
     box-sizing: border-box;
@@ -8871,25 +9068,26 @@ h1 .commend:before{
     padding: 4vw 2vw 2vw;
     background-color: #fff;
     border-radius: 2vw;
-}
-.jinsom-mine-box.cell li {
-    width: 25%;
-    float: left;
-    text-align: center;
-    margin-bottom: 2vw;
-    height: 15vw;
-}
-.jinsom-mine-box.cell li a {
-    height: 15vw;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    animation: c;
+    font-size: 0;
 }
 .jinsom-mine-box-title {
     margin-bottom: 4vw;
     padding: 0 2vw;
     color: #333;
+    font-size: 4vw;
+}
+.jinsom-mine-box.cell li {
+    width: 25%;
+    text-align: center;
+    margin-bottom: 2vw;
+    height: 15vw;
+    display: inline-block;
+}
+.jinsom-mine-box.cell li a {
+    padding: 0;
+}
+.jinsom-mine-page .cell li font {
+    font-size: 4vw;
 }
 .jinsom-mine-box.cell li p {
     font-size: 3.2vw;
@@ -8928,6 +9126,13 @@ h1 .commend:before{
     color: #999;
     margin-top: 2vw;
     font-size: 3.5vw;
+    display: flex;
+    align-items: center;
+}
+.jinsom-mine-user-info-cell .info .id img {
+    width: 9vw;
+    height: auto;
+    margin-left: 2vw;
 }
 .jinsom-mine-user-info-cell .go {
     font-size: 3.5vw;
@@ -8946,6 +9151,8 @@ h1 .commend:before{
 .jinsom-mine-user-info-cell .number>div {
     flex: 1;
     text-align: center;
+    font-size: 4vw;
+    color: #555;
 }
 .jinsom-mine-user-info-cell .number>div p {
     font-size: 3vw;
@@ -9664,7 +9871,7 @@ h1 .commend:before{
     display: block;
     color: #666;
 }
-.jinsom-apply-bbs-content li input, .jinsom-apply-bbs-content li textarea {
+.jinsom-apply-bbs-content li input, .jinsom-apply-bbs-content li textarea,.jinsom-apply-bbs-content li select {
     width: 100%;
     border: 1px solid #eee;
     padding: 2vw;
@@ -9683,7 +9890,70 @@ h1 .commend:before{
     color: #fff;
     border-radius: 1vw;
 }
+.bbs-upload-avatar-add {
+    width: 30vw;
+    height: 30vw;
+    color: #bbb;
+    line-height: 33vw;
+    text-align: center;
+    font-family: 宋体;
+    display: inline-block;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    background-color: #f1f1f1;
+    box-sizing: border-box;
+    border-radius: 1vw;
+}
+.bbs-upload-avatar-add i {
+    font-size: 8vw;
+}
+.bbs-upload-avatar-add input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    border: solid transparent;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+.bbs-upload-avatar-add span {
+    width: 10vw;
+    height: 10vw;
+    margin-top: 9vw;
+    display: none;
+}
+.bbs-upload-img {
+    width: 30vw;
+    height: 30vw;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    border-radius: 1vw;
+    display: none;
+}
 
+.apply-bbs-money-pay {
+    display: flex;
+}
+#jinsom-visit-power-pay input[name="visit_power_pay_price"] {
+    flex: 2;
+}
+.apply-bbs-money-pay .money-pay-label {
+    flex: 1;
+    padding: 2vw;
+    margin-bottom: 0;
+    margin-left: 2vw;
+}
+.apply-bbs-money-pay .money-pay-label input {
+    -webkit-appearance: checkbox;
+    appearance: checkbox;
+    width: 5vw;
+    height: 5vw;
+    margin: 0;
+    margin-right: 2vw;
+    vertical-align: text-bottom;
+}
 
 .jinsom-post-follow-user-list {
     overflow-x: scroll;
@@ -10129,6 +10399,7 @@ h1 .commend:before{
     border-radius: 2vw;
     height: 20vw;
     -webkit-appearance: none;
+    appearance: none;
     font-size: 4vw;
 }
 .jinsom-challenge-content.join {
@@ -10149,9 +10420,12 @@ h1 .commend:before{
     text-align: center;
     color: #333;
 }
+.jinsom-challenge-content .type-desc m {
+    color: var(--jinsom-color);
+}
 .jinsom-challenge-content .type-desc p {
-    color: #2196f3;
-    margin-top: 1vw;
+    margin-top: 4vw;
+    font-weight: bold;
 }
 .jinsom-challenge-content>.price {
     text-align: center;
@@ -10264,11 +10538,18 @@ h1 .commend:before{
     padding: 4vw;
     border-bottom: 1px solid #f2f2f2;
 }
+.jinsom-publish-add-application-form-list li a {
+    display: flex;
+    align-items: center;
+}
 .jinsom-publish-add-application-form-list li i {
     margin-right: 2vw;
     vertical-align: -0.5vw;
 }
-
+.jinsom-publish-add-application-form-list li iconpark-icon {
+    margin-top: 1vw;
+    margin-right: 2vw;
+}
 .jinsom-shop-order-mine-content {
     padding: 22vw 3vw 2vw !important;
 }
@@ -10483,8 +10764,8 @@ h1 .commend:before{
 }
 .jinsom-goods-toolbar .btn {
     display: flex;
-    width: 65%;
-    margin-left: 5vw;
+    width: 60%;
+    margin-left: 2vw;
 }
 .jinsom-goods-toolbar .btn span,.jinsom-shop-select-form-main .btn span {
     flex: 1;
@@ -10500,17 +10781,17 @@ h1 .commend:before{
     background-color: #fe2a54;
     color: #fff;
 }
-.jinsom-goods-toolbar .kefu, .jinsom-goods-toolbar .collect {
+.jinsom-goods-toolbar .kefu, .jinsom-goods-toolbar .collect, .jinsom-goods-toolbar .shopping-cart {
     flex: 1;
     text-align: center;
     margin-bottom: 1vw;
     height: 9vw;
     color: #999;
 }
-.jinsom-goods-toolbar .kefu i, .jinsom-goods-toolbar .collect i {
+.jinsom-goods-toolbar .kefu i, .jinsom-goods-toolbar .collect i,.jinsom-goods-toolbar .shopping-cart i {
     font-size: 4.5vw;
 }
-.jinsom-goods-toolbar .kefu p, .jinsom-goods-toolbar .collect p {
+.jinsom-goods-toolbar .kefu p, .jinsom-goods-toolbar .collect p,.jinsom-goods-toolbar .shopping-cart p {
     font-size: 3vw;
     line-height: 3vw;
 }
@@ -10651,7 +10932,7 @@ h1 .commend:before{
     background-image: -webkit-linear-gradient(left,#f5503a,#fad1cb);
     background-image: linear-gradient(90deg,#f5503a,#fad1cb);
 }
-.jinsom-goods-single-box.comment .jinsom-empty-page i {
+.jinsom-goods-single-box.comment .jinsom-empty-page i,.jinsom-goods-single-box.comment .jinsom-empty-page iconpark-icon {
     font-size: 15vw;
 }
 .jinsom-goods-single-box>.title .right {
@@ -10965,6 +11246,7 @@ h1 .commend:before{
     border: none;
     text-align: center;
     -webkit-appearance: none;
+    appearance: none;
 }
 .jinsom-shop-select-content .select-box.price .list:last-child {
     border-bottom: none;
@@ -10995,6 +11277,7 @@ h1 .commend:before{
     height: 20vw;
     font-size: 4vw;
     -webkit-appearance: none;
+    appearance: none;
 }
 .jinsom-shop-select-content .select-box.pass-info {
     border-top: 1px solid #f1f1f1;
@@ -11015,6 +11298,7 @@ h1 .commend:before{
 .jinsom-shop-select-content .select-box .content .list>li input {
     border: none;
     -webkit-appearance: none;
+    appearance: none;
     padding: 3vw;
     flex: 1;
     border-radius: 1vw;
@@ -11174,6 +11458,7 @@ h1 .commend:before{
     border-radius: 1vw;
     font-size: 3vw;
     display: inline-block;
+    margin-right: 2vw;
 }
 .jinsom-shop-select-post-list li .info {
     padding: 0 2vw 1vw;
@@ -11327,6 +11612,7 @@ h1 .commend:before{
 }
 .jinsom-change-bbs-content li input {
     -webkit-appearance: radio;
+    appearance: radio;
     width: 5vw;
     height: 5vw;
     vertical-align: -1vw;
@@ -11362,7 +11648,9 @@ h1 .commend:before{
     border: 1px solid #aaa;
     background-color: #fff;
     -webkit-appearance: none;
+    appearance: none;
     padding: 0 2vw;
+    font-size: 3.5vw;
 }
 .jinsom-report-content li textarea {
     width: 100%;
@@ -11371,6 +11659,7 @@ h1 .commend:before{
     border: 1px solid #aaa;
     border-radius: 2vw;
     height: 30vw;
+    font-size: 3.5vw;
 }
 .jinsom-report-content .btn {
     text-align: center;
@@ -11459,9 +11748,9 @@ h1 .commend:before{
     font-size: 3.5vw;
     color: #999;
     margin-bottom: 4vw;
+    word-wrap: break-word;
 }
 .jinsom-link-click-auto>a {
-    display: inline-block;
     background-color: var(--jinsom-color);
     color: #fff;
     font-size: 3.5vw;
@@ -11537,7 +11826,7 @@ h1 .commend:before{
     background-color: #e65d4f;
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 10%), inset 0 -0.25em 0 rgb(0 0 0 / 25%), 0 0.25em 0.25em rgb(0 0 0 / 5%);
     color: #fff;
-    padding: 3vw;
+    padding: 3vw 0vw;
     border-radius: 3vw;
 }
 .jinsom-tree-btn>span:active {
@@ -11768,7 +12057,7 @@ h1 .commend:before{
 
 
 /*右侧悬浮按钮屏蔽页面*/
-[data-page="majia"] .jinsom-right-bar,[data-page="tree-mine"] .jinsom-right-bar,[data-page="tree-other"] .jinsom-right-bar,[data-page="follower"] .jinsom-right-bar,[data-page="chat-group"] .jinsom-right-bar,[data-page="chat-one"] .jinsom-right-bar,[data-page="publish"] .jinsom-right-bar,[data-page="setting"] .jinsom-right-bar,[data-page="setting-more"] .jinsom-right-bar,[data-page="setting-other"] .jinsom-right-bar,[data-page="setting-desc"] .jinsom-right-bar,[data-page="setting-email"] .jinsom-right-bar,[data-page="setting-phone"] .jinsom-right-bar,[data-page="setting-password"] .jinsom-right-bar,[data-page="setting-more"] .jinsom-right-bar,[data-page="setting-question"] .jinsom-right-bar,[data-page="comment-post"] .jinsom-right-bar,[data-page="comment-bbs-post"] .jinsom-right-bar {
+[data-page="liang-shop-cat"] .jinsom-right-bar,[data-page="liang-shop-edit"] .jinsom-right-bar,[data-page="liang-shop-add"] .jinsom-right-bar,[data-page="liang-shop"] .jinsom-right-bar,[data-page="liang-rand"] .jinsom-right-bar,[data-page="change-bbs"] .jinsom-right-bar, [data-page="add-post-mark"] .jinsom-right-bar, [data-page="majia"] .jinsom-right-bar, [data-page="tree-mine"] .jinsom-right-bar, [data-page="tree-other"] .jinsom-right-bar, [data-page="follower"] .jinsom-right-bar, [data-page="chat-group"] .jinsom-right-bar, [data-page="chat-one"] .jinsom-right-bar, [data-page="publish"] .jinsom-right-bar, [data-page="setting"] .jinsom-right-bar, [data-page="setting-more"] .jinsom-right-bar, [data-page="setting-other"] .jinsom-right-bar, [data-page="setting-desc"] .jinsom-right-bar, [data-page="setting-email"] .jinsom-right-bar, [data-page="setting-phone"] .jinsom-right-bar, [data-page="setting-password"] .jinsom-right-bar, [data-page="setting-more"] .jinsom-right-bar, [data-page="setting-question"] .jinsom-right-bar, [data-page="comment-post"] .jinsom-right-bar, [data-page="comment-bbs-post"] .jinsom-right-bar {
     display: none;
 }
 
@@ -11856,6 +12145,9 @@ h1 .commend:before{
 .jinsom-chat-group-join-buy li .desc {
     margin: 2vw 0;
     color: #999;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .jinsom-chat-group-join-buy li .price {
     color: #f00;
@@ -11990,11 +12282,14 @@ img.avatar,.jinsom-chat-message-list-user-info a {
 [data-page="publish-redbag"] .navbar:after, [data-page="get-redbag"] .navbar:after, [data-page=member-mine] .navbar:after, [data-page=member-other] .navbar:after, [data-page=bbs] .navbar:after, [data-page=post-goods] .navbar:after,.jinsom-login-navbar.navbar:after,[data-page="reg-email"] .navbar:after,[data-page="forget-password"] .navbar:after,[data-page="reg-phone"] .navbar:after,[data-page="reg-invite"] .navbar:after,[data-page="login-phone"] .navbar:after,[data-page="reg-simple"] .navbar:after {
     display:none;
 }
-[data-page=member-mine] .navbar-inner>div,[data-page=member-mine] .navbar-inner>div>a, [data-page=member-other] .navbar-inner>div,[data-page=member-other] .navbar-inner>div>a, [data-page=bbs] .navbar-inner>div,[data-page=bbs] .navbar-inner>div>a, [data-page=post-goods] .navbar-inner>div,[data-page=post-goods] .navbar-inner>div>a,[data-page="get-redbag"] .navbar-inner>div,[data-page="get-redbag"] .navbar-inner>div>a,[data-page="publish-redbag"] .navbar-inner>div,[data-page="publish-redbag"] .navbar-inner>div>a,.jinsom-login-navbar .navbar-inner>div,.jinsom-login-navbar .navbar-inner>div>a,[data-page="reg-email"] .navbar-inner>div,[data-page="reg-email"] .navbar-inner>div>a,[data-page="forget-password"] .navbar-inner>div,[data-page="forget-password"] .navbar-inner>div>a,[data-page="reg-phone"] .navbar-inner>div,[data-page="reg-phone"] .navbar-inner>div>a,[data-page="reg-invite"] .navbar-inner>div,[data-page="reg-invite"] .navbar-inner>div>a,[data-page="login-phone"] .navbar-inner>div,[data-page="login-phone"] .navbar-inner>div>a,[data-page="reg-simple"] .navbar-inner>div,[data-page="reg-simple"] .navbar-inner>div>a {
+[data-page=member-mine] .navbar-inner>div,[data-page=member-mine] .navbar-inner>div>a, [data-page=member-other] .navbar-inner>div,[data-page=member-other] .navbar-inner>div>a, [data-page=bbs] .navbar-inner>div,[data-page=bbs] .navbar-inner>div>a, [data-page=post-goods] .navbar-inner>div,[data-page=post-goods] .navbar-inner>div>a,[data-page="get-redbag"] .navbar-inner>div,[data-page="get-redbag"] .navbar-inner>div>a,[data-page="publish-redbag"] .navbar-inner>div,[data-page="publish-redbag"] .navbar-inner>div>a,[data-page="login"] .navbar-inner>div,[data-page="login"] .navbar-inner>div>a,[data-page="reg-email"] .navbar-inner>div,[data-page="reg-email"] .navbar-inner>div>a,[data-page="forget-password"] .navbar-inner>div,[data-page="forget-password"] .navbar-inner>div>a,[data-page="reg-phone"] .navbar-inner>div,[data-page="reg-phone"] .navbar-inner>div>a,[data-page="reg-invite"] .navbar-inner>div,[data-page="reg-invite"] .navbar-inner>div>a,[data-page="login-phone"] .navbar-inner>div,[data-page="login-phone"] .navbar-inner>div>a,[data-page="reg-simple"] .navbar-inner>div,[data-page="reg-simple"] .navbar-inner>div>a {
     color:#fff;
 }
 [data-page=member-mine] .navbar-inner.color>div,[data-page=member-mine] .navbar-inner.color>div>a, [data-page=member-other] .navbar-inner.color>div,[data-page=member-other] .navbar-inner.color>div>a, [data-page=bbs] .navbar-inner.color>div,[data-page=bbs] .navbar-inner.color>div>a, [data-page=post-goods] .navbar-inner.color>div,[data-page=post-goods] .navbar-inner.color>div>a {
     color:var(--jinsom-navbar-text-color);
+}
+[data-page="login"] .navbar:after {
+    display: none;
 }
 
 /*红包头部导航背景色*/
@@ -12003,7 +12298,7 @@ img.avatar,.jinsom-chat-message-list-user-info a {
 }
 
 /*登录注册*/
-.jinsom-login-navbar .navbar-inner,[data-page="reg-email"] .navbar-inner,[data-page="forget-password"] .navbar-inner,[data-page="reg-phone"] .navbar-inner,[data-page="reg-invite"] .navbar-inner,[data-page="login-phone"] .navbar-inner,[data-page="reg-simple"] .navbar-inner {
+[data-page="login"] .navbar-inner,[data-page="reg-email"] .navbar-inner,[data-page="forget-password"] .navbar-inner,[data-page="reg-phone"] .navbar-inner,[data-page="reg-invite"] .navbar-inner,[data-page="login-phone"] .navbar-inner,[data-page="reg-simple"] .navbar-inner {
     background-color: rgb(255 0 0 / 0);
     position: absolute;
 }
@@ -12011,4 +12306,505 @@ img.avatar,.jinsom-chat-message-list-user-info a {
     background-size: cover;
     background-position: center;
     background-color: #222;
+}
+
+.jinsom-post-list-sns {
+    position: relative;
+}
+
+
+.jinsom-publish-words-form.single .images, .jinsom-publish-words-form.bbs .images, .jinsom-publish-words-form.single .content>.smile, .jinsom-publish-words-form.bbs .content>.smile {
+    display: none;
+}
+.tox-tinymce {
+    border: 1px solid #eee !important;
+    border-radius: 6px !important;
+}
+.tox:not(.tox-tinymce-inline) .tox-editor-header {
+    box-shadow: 0 0 0 #000 !important;
+}
+.tox .tox-toolbar {
+    background: none !important;
+    border-bottom: 1px solid #f1f1f1!important;
+}
+
+.jinsom-post-single-content ol {
+    margin: 2vw 0;
+    padding-left: 10vw;
+    box-sizing: border-box;
+}
+
+.jinsom-mark.jinsom-liang {
+    border-radius: 10px 0 10px 0;
+    padding: 0.5vw 1vw;
+    animation: liuguang 2s infinite linear;
+    color: #fff400;
+    position: relative;
+    z-index: 1;
+}
+@keyframes liuguang{
+  0% {
+    background: linear-gradient(to bottom right, #333399 0%, #ff00cc 100%, #333399 200%, #ff00cc 300%);
+  }
+
+  5% {
+    background: linear-gradient(to bottom right, #333399 -10%, #ff00cc 90%, #333399 190%, #ff00cc 290%);
+  }
+
+  10% {
+    background: linear-gradient(to bottom right, #333399 -20%, #ff00cc 80%, #333399 180%, #ff00cc 280%);
+  }
+
+  15% {
+    background: linear-gradient(to bottom right, #333399 -30%, #ff00cc 70%, #333399 170%, #ff00cc 270%);
+  }
+
+  20% {
+    background: linear-gradient(to bottom right, #333399 -40%, #ff00cc 60%, #333399 160%, #ff00cc 260%);
+  }
+
+  25% {
+    background: linear-gradient(to bottom right, #333399 -50%, #ff00cc 50%, #333399 150%, #ff00cc 250%);
+  }
+
+  30% {
+    background: linear-gradient(to bottom right, #333399 -60%, #ff00cc 40%, #333399 140%, #ff00cc 240%);
+  }
+
+  35% {
+    background: linear-gradient(to bottom right, #333399 -70%, #ff00cc 30%, #333399 130%, #ff00cc 230%);
+  }
+
+  40% {
+    background: linear-gradient(to bottom right, #333399 -80%, #ff00cc 20%, #333399 120%, #ff00cc 220%);
+  }
+
+  45% {
+    background: linear-gradient(to bottom right, #333399 -90%, #ff00cc 10%, #333399 110%, #ff00cc 210%);
+  }
+
+  50% {
+    background: linear-gradient(to bottom right, #333399 -100%, #ff00cc 0%, #333399 100%, #ff00cc 200%);
+  }
+
+
+  55% {
+    background: linear-gradient(to bottom right, #333399 -110%, #ff00cc -10%, #333399 90%, #ff00cc 190%);
+  }
+
+  60% {
+    background: linear-gradient(to bottom right, #333399 -120%, #ff00cc -20%, #333399 80%, #ff00cc 180%);
+  }
+
+  65% {
+    background: linear-gradient(to bottom right, #333399 -130%, #ff00cc -30%, #333399 70%, #ff00cc 170%);
+  }
+
+  70% {
+    background: linear-gradient(to bottom right, #333399 -140%, #ff00cc -40%, #333399 60%, #ff00cc 160%);
+  }
+
+  75% {
+    background: linear-gradient(to bottom right, #333399 -150%, #ff00cc -50%, #333399 50%, #ff00cc 150%);
+  }
+
+  80% {
+    background: linear-gradient(to bottom right, #333399 -160%, #ff00cc -60%, #333399 40%, #ff00cc 140%);
+  }
+
+  85% {
+    background: linear-gradient(to bottom right, #333399 -170%, #ff00cc -70%, #333399 30%, #ff00cc 130%);
+  }
+
+  90% {
+    background: linear-gradient(to bottom right, #333399 -180%, #ff00cc -80%, #333399 20%, #ff00cc 120%);
+  }
+
+  95% {
+    background: linear-gradient(to bottom right, #333399 -190%, #ff00cc -90%, #333399 10%, #ff00cc 110%);
+  }
+
+  100% {
+    background: linear-gradient(to bottom right, #333399 -200%, #ff00cc -100%, #333399 0%, #ff00cc 100%);
+  }
+}
+
+/*购物车*/
+.jinsom-shopping-cart-list {
+    padding-top: 2vw;
+}
+.jinsom-shopping-cart-list .content-box {
+    display: flex;
+    margin-bottom: 5vw;
+}
+.jinsom-shopping-cart-list .content-box>.content-left {
+    -webkit-appearance: radio;
+    appearance: radio;
+    width: 5vw;
+    height: 4vw;
+    font-size: 4vw;
+    margin: 8vw 3vw;
+}
+.jinsom-shopping-cart-list .content-box>.content-right {
+    display: flex;
+    flex: 1;
+}
+.jinsom-shopping-cart-list .content-box>.content-right img {
+    width: 22vw;
+    height: 22vw;
+    object-fit: cover;
+    border-radius: 1vw;
+}
+.jinsom-shopping-cart-list .content-box>.content-right>div {
+    margin: 0 2vw;
+    width: 100%;
+    position: relative;
+}
+.jinsom-shopping-cart-list .content-box>.content-right>div .title>a {
+    font-size: 3.5vw;
+    line-height: 5.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
+.jinsom-shopping-cart-list .content-box>.content-right>div .select {
+    font-size: 3.5vw;
+    line-height: 6vw;
+    overflow: hidden;
+    display: flex;
+    color: #999;
+    position: absolute;
+    bottom: 5vw;
+}
+.jinsom-shopping-cart-list .content-box>.content-right>div .select li span {
+    margin-right: 2vw;
+}
+.content-right .goods-price-info {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.content-right .goods-price-info li.price {
+    flex: 1;
+}
+.content-right .goods-price-info li.price span {
+    font-size: 3.5vw;
+    color: #ff5000;
+}
+.content-right .goods-price-info li.price span em {
+    font-style: normal;
+}
+.content-right .goods-price-info li.number i {
+    font-size: 3vw;
+    background-color: #f1f1f1;
+    padding: 1.5vw;
+    border-radius: 1vw;
+}
+.content-right .goods-price-info li.number i.no {
+    background-color: #f5f5f5;
+    color: #ccc;
+}
+.jinsom-shopping-cart-list .jinsom-jinbi {
+    font-size: 3.5vw;
+    margin-right: 2px;
+}
+.jinsom-shopping-cart-list .content-box>.content-right>div .number input {
+    width: 8vw;
+    height: 5vw;
+    border: none;
+    outline: none;
+    user-select: auto;
+    font-size: 3.5vw;
+    text-align: center;
+    color: #666;
+    padding: 0;
+}
+.jinsom-shopping-cart-list .buy-bar {
+    background: #fff;
+    position: fixed;
+    bottom: 0vw;
+    bottom: calc(0vw + constant(safe-area-inset-bottom));
+    bottom: calc(0vw + env(safe-area-inset-bottom));
+    width: 96vw;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2vw;
+    background-color: #FFFFFF;
+    height: 15vw;
+    align-items: center;
+    border-top: 1px solid #f5f5f5;
+}
+.jinsom-shopping-cart-list .buy-bar>label {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin-right: 2vw;
+}
+.jinsom-shopping-cart-list .buy-bar>label>input {
+    -webkit-appearance: radio;
+    appearance: radio;
+    width: 5vw;
+    height: 4vw;
+    font-size: 4vw;
+    margin: 0;
+    margin-right: 2vw;
+}
+.jinsom-shopping-cart-list .buy-bar>.total-box {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+.jinsom-shopping-cart-list .buy-bar>.total-box span:nth-child(2) {
+    color: #FF5000;
+    vertical-align: middle;
+    font-size: 15px;
+}
+.jinsom-shopping-cart-list .buy-bar>.total-box span em {
+    font-style: normal;
+}
+.jinsom-shopping-cart-list .buy-bar .goods-delete {
+    display: none;
+}
+.jinsom-shopping-cart-list .buy-bar .buy-btn {
+    margin-left: 4vw;
+    background: var(--jinsom-color);
+    font-size: 4vw;
+    line-height: 4vw;
+    padding: 2vw 4vw;
+    text-align: center;
+    border-radius: 5vw;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.5);
+}
+.jinsom-shopping-cart-list .buy-bar .buy-btn.ok {
+    color: #fff;
+}
+.jinsom-batch-goods-info {
+    background: #f9f9f9;
+    padding: 2vw;
+    margin-bottom: 2vw;
+}
+.jinsom-batch-goods-info .batch-title {
+    margin-bottom: 2vw;
+    font-size: 4vw;
+    color: #333;
+    border-radius: 1vw;
+}
+.jinsom-batch-goods-info .batch-box {
+    padding: 0 2vw;
+    display: flex;
+    color: #888;
+}
+.jinsom-batch-goods-info .batch-box>div {
+    line-height: normal;
+    margin-right: 2vw;
+}
+.jinsom-batch-goods-info .batch-box>div>span:first-child, .jinsom-batch-goods-info .batch-box>.select>li>span:first-child {
+    font-size: 3vw;
+    margin-right: 2vw;
+}
+.jinsom-batch-goods-info .batch-box>div>span:last-child, .jinsom-batch-goods-info .batch-box>.select>li>span:last-child {
+    color: #F44336;
+    font-size: 3vw;
+}
+.jinsom-batch-goods-info .batch-box .price span:last-child {
+    color: #c00000;
+    font-size: 3vw;
+    vertical-align: 0;
+}
+.jinsom-batch-goods-info .batch-box .select {
+    display: flex;
+}
+.jinsom-batch-goods-info .batch-box .select li {
+    margin-right: 2vw;
+}
+.jinsom-batch-goods-info .batch-box .select li:last-child {
+    margin-right: 0;
+}
+.jinsom-batch-goods-info .batch-box .jinsom-jinbi {
+    font-size: 3vw;
+    margin-right: 1vw;
+}
+.jinsom-batch-goods-info .batch-tips {
+    padding: 1.5vw;
+    background-color: #fef3f3;
+    color: #e5685f;
+    border-radius: 1vw;
+    border: 1px #f3cfce solid;
+    line-height: 4vw;
+    font-size: 3vw;
+    margin-top: 2vw;
+}
+.jinsom-batch-goods-info .pass-info.batch {
+    margin-top: 2vw;
+    background: #eee;
+    padding: 2vw;
+    border-radius: 1vw;
+}
+.jinsom-batch-goods-info .pass-info.batch p {
+    font-size: 3.5vw;
+    color: #999;
+}
+.jinsom-batch-goods-info .pass-info.batch .list li {
+    width: 50%;
+    float: left;
+    margin-top: 2vw;
+}
+.jinsom-goods-order-confirmation-content .pass-info .list li span {
+    margin-right: 1.5vw;
+    color: #5fb878;
+    display: inline-block;
+    width: 20%;
+    text-align: left;
+    font-size: 3vw;
+}
+.jinsom-batch-goods-info .pass-info.batch .list li input {
+    border-radius: 1vw;
+    width: 70%;
+    border: 1px solid #f2f2f2;
+    padding: 1.5vw;
+    box-sizing: border-box;
+    margin-top: 0;
+    height: 6.5vw;
+    font-size: 3vw;
+}
+.jinsom-batch-goods-info .marks {
+    display: flex;
+    margin-top: 2vw;
+    background: #eee;
+    border-radius: 1vw;
+}
+.jinsom-batch-goods-info .marks p {
+    line-height: 8vw;
+    margin: 0 2vw;
+    color: #999;
+    font-size: 3.5vw;
+}
+.jinsom-batch-goods-info .marks input {
+    border: 1px solid #f2f2f2;
+    padding: 2vw;
+    width: auto;
+    box-sizing: border-box;
+    margin-top: 0;
+    height: 8vw;
+    flex: 1;
+    font-size: 3vw;
+}
+.jinsom-goods-order-confirmation-content .tips {
+    margin-bottom: 2vw;
+    padding: 2vw;
+    background-color: #fef3f3;
+    color: #e5685f;
+    border-radius: 1vw;
+    border: 1px #f3cfce solid;
+    line-height: 6vw;
+    font-size: 3.5vw;
+}
+.jinsom-goods-order-confirmation-content .batch-count {
+    padding: 2vw;
+    background-color: #f9f9f9;
+    border-radius: 1vw;
+    margin-bottom: 2vw;
+    font-size:3.5vw;
+}
+.jinsom-goods-order-confirmation-content .batch-count em {
+    font-style: normal;
+    color: #c00000;
+    font-size: 5vw;
+    margin: 0 2vw;
+}
+.jinsom-goods-order-confirmation-content .batch-count em i {
+    font-size: 4.5vw;
+    font-style: normal;
+}
+.jinsom-goods-order-confirmation-content .batch-count em i.jinsom-jinbi {
+    margin-right: 1vw;
+}
+.jinsom-goods-order-confirmation-content .batch-count .price em:last-child {
+    color: #fe7f3e;
+}
+.jinsom-download-file-note-content {
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+.jinsom-download-file-note-box {
+    margin: 2vw 0;
+    background-color: #fff;
+    color: #5f5f5f;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #eee;
+}
+.jinsom-download-file-note-box td,.jinsom-download-file-note-box th {
+    font-size: 3.5vw;
+    text-align: center;
+}
+.jinsom-download-file-note-box td span {
+    color: #f00;
+}
+.jinsom-post-lock {
+    background-color: rgb(255 237 219 / 0.95);
+    margin-bottom: 2vw;
+    padding: 2vw 3vw;
+    box-sizing: border-box;
+    color: #ff8200;
+    font-size: 3vw;
+    line-height: 6vw;
+    font-weight: 600;
+    text-align: center;
+}
+.jinsom-content-manage {
+    padding: 0 2vw;
+}
+.jinsom-content-manage .header {
+    display: flex;
+    padding: 2vw 0;
+    border-bottom: 1px solid #f8f8f8;
+}
+.jinsom-content-manage .header>span:first-child, .jinsom-content-manage li span:first-child {
+    flex: 2;
+    text-align: left;
+    padding: 0 1vw;
+}
+.jinsom-content-manage .header span {
+    color: #555;
+    font-weight: bold;
+}
+.jinsom-content-manage .header>span, .jinsom-content-manage li span {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid #f2f2f2;
+    box-sizing: border-box;
+}
+.jinsom-content-manage li {
+    display: flex;
+    text-align: center;
+    padding: 2vw 0;
+    color: #999;
+    cursor: pointer;
+    height: 6vw;
+    line-height: 6vw;
+    border-bottom: 1px solid #f2f2f2;
+}
+.jinsom-content-manage li span:last-child {
+    display: flex;
+    justify-content: center;
+}
+.jinsom-content-manage .header>span:last-child, .jinsom-content-manage li span:last-child {
+    border: none;
+}
+.jinsom-content-manage li span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.jinsom-content-manage li span m {
+    text-decoration: underline;
+    flex: 1;
 }

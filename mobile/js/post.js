@@ -23,6 +23,9 @@ author_id=$(obj).attr('author_id');
 
 
 if(load_type=='ajax'){//点击菜单
+
+$('.jinsom-post-follow-user-list').remove();
+
 if(author_id){
 if(author_id==jinsom.user_id){
 post_list=$('.pages .page:last-child .jinsom-member-mine-post-list');	
@@ -54,6 +57,10 @@ if(author_id){
 post_list.before(jinsom.loading_post);//加载动画
 }else{
 $('.pull-to-refresh-layer').after(jinsom.loading_post);
+}
+
+if(index==-1){
+index=0;
 }
 
 sns_page=2;
@@ -126,6 +133,7 @@ post_list=$(obj).parent().next();
 post_list.attr('type',type);
 post_list.attr('page',2);
 topic=$(obj).attr('topic');
+meta_key=$(obj).attr('meta-key');
 post_list.prepend(jinsom.loading_post);
 
 if($(obj).parent().next().hasClass('jinsom-bbs-post-list-3')){
@@ -135,7 +143,7 @@ post_list.html(jinsom.loading_post);
 $.ajax({
 type: "POST",
 url:  jinsom.mobile_ajax_url+"/post/bbs.php",
-data: {bbs_id:bbs_id,type:type,topic:topic},
+data: {bbs_id:bbs_id,type:type,topic:topic,meta_key:meta_key},
 success: function(msg){
 if(msg!=0){
 

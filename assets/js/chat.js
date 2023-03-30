@@ -62,17 +62,7 @@ $('.jinsom-chat-user-window').css({"top":"50px","bottom":"0","height":540});
 $('.jinsom-chat-message-list').css('height',250);
 
 },
-content: 
-'<div class="jinsom-chat-message-list" data-no-instant></div>'+
-'<div class="jinsom-chat-windows-footer"><div class="jinsom-msg-tips" onclick=\'jinsom_im_tips(this,"one")\'>底部</div>'+
-'<div class="jinsom-chat-windows-footer-bar one clear">'+
-'<span onclick=\'jinsom_smile(this,"im-one","")\' class="jinsom-icon smile jinsom-weixiao-"></span>'+
-'<span class="image jinsom-icon jinsom-tupian1"></span>'+
-'<span class="notice jinsom-icon jinsom-tongzhi1"></span>'+
-'</div>'+
-'<textarea class="jinsom-chat-textarea"></textarea>'+
-'<div class="jinsom-chat-windows-footer-send clear">'+
-'<div class="jinsom-chat-send-message-btn opacity" onclick="jinsom_send_msg()">发送</div></div></div>',
+content: msg.main
 
 });  
 }
@@ -81,13 +71,15 @@ content:
 
 
 //==================渲染=========================
+$('.jinsom-chat-windows-footer-bar.one').html(msg.tool);
+
 //上传图片
-$('.jinsom-chat-windows-footer-bar.one .image').remove();//先移除原始模块
-$('.jinsom-chat-windows-footer-bar.one .smile').after('<span class="image jinsom-icon jinsom-tupian1"></span>');//重新添加模块
+// $('.jinsom-chat-windows-footer-bar.one .image').remove();//先移除原始模块
+// $('.jinsom-chat-windows-footer-bar.one .smile').after('<span class="image jinsom-icon jinsom-tupian1"></span>');//重新添加模块
 jinsom_im_upload_one(user_id);
 
 $('.jinsom-chat-user-window .jinsom-chat-windows-user-header').remove();
-$('.jinsom-chat-user-window').append('<div class="jinsom-chat-windows-user-header chat-one" data="'+user_id+'"><div class="jinsom-chat-windows-user-avatar">'+avatar+'</div><div class="jinsom-chat-windows-user-info"><div class="jinsom-chat-windows-user-name">'+name+'</div><span class="jinsom-chat-online-status">'+status+'</span><div class="jinsom-chat-windows-user-desc">'+desc+'</div>	</div></div>');
+$('.jinsom-chat-user-window').append('<div class="jinsom-chat-windows-user-header chat-one" data="'+user_id+'"><div class="jinsom-chat-windows-user-avatar"><a href="'+msg.user_link+'" target="_blank">'+avatar+'</a></div><div class="jinsom-chat-windows-user-info"><div class="jinsom-chat-windows-user-name">'+name+'</div><span class="jinsom-chat-online-status">'+status+'</span><div class="jinsom-chat-windows-user-desc">'+desc+'</div>	</div></div>');
 $('.jinsom-chat-message-list').html(msg.messages_list); 
 $('.jinsom-chat-message-list').scrollTop($('.jinsom-chat-message-list')[0].scrollHeight); 
 
@@ -421,7 +413,7 @@ function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }
 }else if(msg.code==1){
 
-ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'"}');
+ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","notice_user_name":"'+jinsom.nickname_base+'"}');
 
 //机器人
 if(msg.rebot_name){
@@ -465,6 +457,12 @@ $('.jinsom-chat-content-recent-user .jinsom-group-top-br').after($('#jinsom-chat
 $('#jinsom-chat-'+author_id+' .msg').text('[图片]');
 }
 
+}else if(msg.code == 4){
+jinsom_msg(msg.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(msg.code == 5){
+jinsom_msg(msg.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(msg.msg);	
 }
@@ -501,9 +499,15 @@ $('.jinsom-chat-message-group-list').scrollTop($('.jinsom-chat-message-group-lis
 });
 
 
-ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'"}');
+ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","notice_user_name":"'+jinsom.nickname_base+'"}');
 
 
+}else if(msg.code == 4){
+jinsom_msg(msg.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(msg.code == 5){
+jinsom_msg(msg.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(msg.msg);	
 }

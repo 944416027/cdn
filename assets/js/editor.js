@@ -1,6 +1,19 @@
 
 //弹出对应类型的表单
 function jinsom_editor_form(type,post_id){
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
+
 if(type=='single'){
 window.location.href=jinsom.member_url_permalink+'info=editor-single&post_id='+post_id;
 return false;
@@ -119,18 +132,6 @@ $('.jinsom-publish-set-video-img-upload').html('<i class="jinsom-icon jinsom-sha
 }
 
 
-//关闭发表窗口
-$(".jinsom-publish-words-btn .cancel").click(function(){
-layer.confirm('你确定要关闭窗口吗？', {
-btnAlign: 'c',
-btn: ['确定','取消']
-}, function(index){
-layer.close(jinsom_publish_form); 
-layer.close(index);
-});
-});
-
-
 }//success
 }); //ajax
 
@@ -143,7 +144,18 @@ layer.close(index);
 
 //编辑动态
 function jinsom_editor_words(post_id,obj){
-
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 power=$(obj).parent().siblings('#jinsom-pop-power').val();
 if(power==1||power==2||power==4||power==5){
 if(power==1){
@@ -210,7 +222,18 @@ function d(){window.location.href=msg.url;}setTimeout(d,2000);
 
 //编辑视频
 function jinsom_editor_video(post_id){
-
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 power=$('#jinsom-pop-power').val();
 if(power==1){
 if($('.jinsom-publish-words-power-content .price').val()==''){
@@ -274,6 +297,18 @@ function d(){window.location.href=msg.url;}setTimeout(d,2000);
 
 //编辑文章
 function jinsom_editor_single(post_id){
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 if(ue_single.queryCommandState('source')){
 ue_single.execCommand('source');	
 }
@@ -355,7 +390,18 @@ function d(){window.location.href=msg.url;}setTimeout(d,2000);
 
 //编辑音乐
 function jinsom_editor_music(post_id){
-
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 power=$('#jinsom-pop-power').val();
 if(power==1){
 if($('.jinsom-publish-words-power-content .price').val()==''){
@@ -419,6 +465,18 @@ function d(){window.location.href=msg.url;}setTimeout(d,2000);
 
 //编辑帖子
 function jinsom_editor_bbs_post(post_id){
+if(!jinsom.is_login){
+jinsom_pop_login_style();	
+return false;
+}
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 if(ue.queryCommandState('source')){
 ue.execCommand('source');	
 }

@@ -2242,7 +2242,7 @@ window.Jinsom = function () {
 if(s.name!=null&&s.name.indexOf('jinsom-')==-1){ 
 if(s.query.url){
 if(jinsom.permalink_structure){//固定连接   
-window.history.pushState(null,null,s.query.url+'#'+Math.random().toString(36).substr(2,5));     
+window.history.pushState(null,null,s.query.url+"?t="+jinsom.who+"#"+Math.random().toString(36).substr(2,5));     
 }else{//朴素  
 window.history.pushState(null,null,'/?p='+s.query.post_id+'#'+Math.random().toString(36).substr(2,5));      
 }

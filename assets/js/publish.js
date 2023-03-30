@@ -7,6 +7,14 @@ if(!jinsom.is_login){
 jinsom_pop_login_style();	
 return false;
 }
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 layer.closeAll(); 
 layer.load(1);
 $.ajax({
@@ -32,6 +40,14 @@ if(!jinsom.is_login){
 jinsom_pop_login_style();	
 return false;
 }
+if(jinsom.publish_is_phone&&!jinsom.is_phone){
+jinsom_update_phone_form(jinsom.user_id);
+return false;
+}
+if(jinsom.publish_is_email&&!jinsom.is_email){
+jinsom_update_mail_form(jinsom.user_id,2);
+return false;
+}
 layer.closeAll(); 
 
 if(type=='custom'){
@@ -45,8 +61,9 @@ type: "POST",
 url:jinsom.jinsom_ajax_url+"/publish/power.php",
 data:{type:type,bbs_id:bbs_id},
 success: function(msg){
-if(msg.code==0){
 layer.closeAll('loading');
+
+if(msg.code==0){
 layer.msg(msg.msg);	
 }else if(msg.code==1){
 
@@ -150,6 +167,12 @@ $('.jinsom-upload-add-icon').hide();//隐藏添加按钮
 if(number<words_images_max){
 if(res.code == 1){
 $('.jinsom-publish-words-image').prepend('<li><a href="'+res.file_url+'" data-fancybox="publish-gallery"><img src="'+res.file_thum_url+'" class="img"></a><div class="bar"><i class="jinsom-icon jinsom-fanhui2" onclick="jinsom_img_left(this)"></i><i class="jinsom-icon jinsom-bangzhujinru" onclick="jinsom_img_right(this)"></i><i class="jinsom-icon jinsom-guanbi" onclick="jinsom_remove_publish_img(this)"></i></div></li>');
+}else if(res.code == 4){
+jinsom_msg(res.msg);
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+jinsom_msg(res.msg);
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }else{
 layer.msg(res.msg);	
 }
@@ -182,6 +205,10 @@ $('.jinsom-publish-set-video-img-upload').html('<i class="jinsom-icon jinsom-sha
 layer.msg(res.msg);
 if(res.code == 1){
 $('#jinsom-video-img-url').val(res.file_url);
+}else if(res.code == 4){
+function d(){jinsom_update_phone_form(jinsom.user_id);}setTimeout(d,2000);
+}else if(res.code == 5){
+function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
 }
 },
 error: function(index, upload){
@@ -193,24 +220,17 @@ $('.jinsom-publish-set-video-img-upload').html('<i class="jinsom-icon jinsom-sha
 }
 
 
-//关闭发表窗口
-$(".jinsom-publish-words-btn .cancel").click(function(){
-layer.confirm('你确定要关闭窗口吗？', {
-btnAlign: 'c',
-btn: ['确定','取消']
-}, function(index){
-layer.close(jinsom_publish_form); 
-layer.close(index);
-});
-});
-
 
 }//success
 }); //ajax
 
 
 	
-}//code==1
+}else if(msg.code==3){//弹窗开通会员
+layer.closeAll('loading');
+layer.msg(msg.msg);	
+function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
+}
 
 }//success
 }); //ajax
@@ -565,7 +585,7 @@ function c(){jinsom_publish_topic_form();}setTimeout(c,1500);
 }else if(msg.code==3){//弹窗开通会员
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }
 
 }
@@ -674,7 +694,7 @@ function c(){jinsom_publish_topic_form();}setTimeout(c,1500);
 }else if(msg.code==3){//弹窗开通会员
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }
 
 }
@@ -755,7 +775,7 @@ function c(){jinsom_publish_topic_form();}setTimeout(c,1500);
 }else if(msg.code==3){//弹窗开通会员
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }
 
 }
@@ -839,7 +859,8 @@ $(window).unbind('beforeunload');
 ue_single.execCommand('clearlocaldata');
 ue_single_pay.execCommand('clearlocaldata');
 
-function d(){window.location.href=msg.url;}setTimeout(d,2000);
+// function d(){window.location.href=msg.url;}setTimeout(d,2000);
+jinsom_publish_tips_confirm(msg);
 }else if(msg.code==2){
 function d(){jinsom_update_phone_form(msg.user_id);}setTimeout(d,2000);//弹出绑定手机号
 }else if(msg.code==5){//添加话题窗口
@@ -847,7 +868,7 @@ function c(){jinsom_publish_topic_form();}setTimeout(c,1500);
 }else if(msg.code==3){//弹窗开通会员
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }
 
 }
@@ -1021,7 +1042,8 @@ ue_pay.execCommand('clearlocaldata');
 }
 }
 
-function d(){window.location.href=msg.url;}setTimeout(d,2000);
+// function d(){window.location.href=msg.url;}setTimeout(d,2000);
+jinsom_publish_tips_confirm(msg);
 }else if(msg.code==2){//弹出绑定手机号
 function d(){jinsom_update_phone_form(msg.user_id);}setTimeout(d,2000);
 }else if(msg.code==5){//添加话题窗口
@@ -1029,7 +1051,7 @@ function c(){jinsom_publish_topic_form();}setTimeout(c,1500);
 }else if(msg.code==3){//弹窗开通会员
 function c(){jinsom_recharge_vip_form();}setTimeout(c,1500);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }
 
 }
@@ -1060,7 +1082,7 @@ ws.send('{"from_url":"'+jinsom.home_url+'","type":"new_posts","do_user_id":"'+ji
 
 function d(){window.location.href=msg.url;}setTimeout(d,2000);
 }else if(msg.code==4){//绑定邮箱
-function e(){jinsom_update_mail_form(jinsom.user_id,2);}setTimeout(e,1500);
+function e(){jinsom_update_mail_form(msg.user_id,2);}setTimeout(e,1500);
 }else if(msg.code==2){//弹出绑定手机号
 function d(){jinsom_update_phone_form(msg.user_id);}setTimeout(d,2000);
 }
@@ -1121,4 +1143,42 @@ content: msg
 }   
 });
 }
+}
+
+
+//取消发布
+function jinsom_cancel_publish(type){
+layer.confirm('你确定要离开吗？', {
+btnAlign: 'c',
+btn: ['确定','取消']
+}, function(index){
+layer.close(index);
+
+if(type=='popup'){
+layer.close(jinsom_publish_form);
+}else{//页面
+layer.load(1);
+$(window).unbind('beforeunload');
+history.go(-1)//返回上一页
+}
+
+});	
+}
+
+//文章&帖子发布成功提醒弹窗封装
+function jinsom_publish_tips_confirm(msg){
+layer.confirm(msg.msg,{
+btnAlign: 'c',
+btn: ['再发一篇','查看内容','返回首页'],
+btn3: function(index, layero){
+layer.closeAll();
+window.open(jinsom.home_url+'/','_self');
+}
+}, function(index, layero){
+layer.closeAll();
+window.location.reload();
+}, function(index){
+layer.closeAll();
+window.open(msg.url,'_self');
+});
 }

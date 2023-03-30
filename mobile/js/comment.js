@@ -53,12 +53,12 @@ $('.jinsom-post-'+post_id).parent().prev().find('.number').html(parseInt(comment
 
 comment_list.prepend('\
 <div class="jinsom-comment-'+msg.id+'">\
-<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><i class="fa fa-thumbs-o-up"></i><m>0</m></div>\
+<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><m>0</m><i class="fa fa-thumbs-o-up"></i></div>\
 <div class="header clear">\
 <div class="avatarimg">'+jinsom.avatar+jinsom.verify+'</div>\
 <div class="info">\
 <div class="name">'+jinsom.nickname+jinsom.lv+jinsom.vip+'</div>\
-<div class="from"><span class="time">刚刚</span><span>手机端</span></div>\
+<div class="from"><span class="time">刚刚</span></div>\
 </div>\
 </div>\
 <div class="content">'+msg.content+'</div>\
@@ -141,12 +141,12 @@ $('.jinsom-post-'+post_id).parent().prev().find('.number').html(parseInt(comment
 
 comment_list.prepend('\
 <div class="jinsom-comment-'+msg.id+'">\
-<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><i class="fa fa-thumbs-o-up"></i><m>0</m></div>\
+<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><m>0</m><i class="fa fa-thumbs-o-up"></i></div>\
 <div class="header clear">\
 <div class="avatarimg">'+jinsom.avatar+jinsom.verify+'</div>\
 <div class="info">\
 <div class="name">'+jinsom.nickname+jinsom.lv+jinsom.vip+'</div>\
-<div class="from"><span class="time">刚刚</span><span>手机端</span></div>\
+<div class="from"><span class="time">刚刚</span></div>\
 </div>\
 </div>\
 <div class="content">'+msg.content+'</div>\
@@ -236,12 +236,12 @@ $('.jinsom-comment-'+comment_id).parents('#jinsom-comment-child-page').prev().fi
 
 comment_list.prepend('\
 <div class="jinsom-comment-'+msg.id+'">\
-<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><i class="fa fa-thumbs-o-up"></i><m>0</m></div>\
+<div class="up" onclick="jinsom_comment_up('+msg.id+',this)"><m>0</m><i class="fa fa-thumbs-o-up"></i></div>\
 <div class="header clear">\
 <div class="avatarimg">'+jinsom.avatar+jinsom.verify+'</div>\
 <div class="info">\
 <div class="name">'+jinsom.nickname+jinsom.lv+jinsom.vip+'</div>\
-<div class="from"><span class="time">刚刚</span><span>手机端</span></div>\
+<div class="from"><span class="time">刚刚</span></div>\
 </div>\
 </div>\
 <div class="content">'+msg.content+'</div>\
@@ -275,7 +275,7 @@ layer.open({content:msg.msg,skin:'msg',time:2});
 //评论点赞
 function jinsom_comment_up(comment_id,obj){
 if(!jinsom.is_login){
-myApp.loginScreen();  
+jinsom_login_page();  
 return false;
 }
 comment_dom=$('.jinsom-comment-'+comment_id+' .up');

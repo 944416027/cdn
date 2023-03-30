@@ -11,7 +11,7 @@ page=$(obj).attr('page');
 $(obj).before(jinsom.loading_post);
 $(obj).hide();	
 
-if(author_id){
+if(author_id==1){
 menu_list=$('.jinsom-member-menu li.on');
 }else{
 menu_list=$('.jinsom-index-menu li.on');
@@ -284,4 +284,171 @@ function jinsom_lightbox(){
 $("[data-fancybox]").fancybox({
 hash:false,
 });	
+}
+
+
+
+//=================论坛ajax加载内容
+
+//comment:按最新回复排序
+//new:按最新发表排序
+//nice:精品帖子
+function jinsom_ajax_bbs_menu(type,obj){
+if($('.jinsom-load').length==0){
+$(obj).addClass('on').siblings().removeClass('on');
+var bbs_id=$('.jinsom-bbs-header').attr('data');
+$('.jinsom-bbs-list-box').prepend(jinsom.loading_post);
+topic=$(obj).attr('topic');
+meta_key=$(obj).attr('meta-key');
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/data/bbs.php",
+data: {page:1,bbs_id:bbs_id,type:type,topic:topic,meta_key:meta_key},
+success: function(msg){ 
+audio=document.getElementById('jinsom-reload-music');
+audio.play();
+
+$('.jinsom-bbs-list-box').html(msg);//追加内容	
+
+
+if($('#jinsom-bbs-list-ajax-page').length>0){//分页
+index=$('.jinsom-bbs-box-header .left li.on').index();
+history.pushState('','','?type='+type+'&index='+index+'&page=1');
+
+layui.use('laypage', function(){
+var laypage = layui.laypage;
+laypage.render({
+elem:'jinsom-bbs-list-ajax-page',
+count:$('#jinsom-bbs-list-ajax-page').attr('count'),
+limit:$('#jinsom-bbs-list-ajax-page').attr('number'),
+theme:'var(--jinsom-color)',
+jump:function(obj,first){
+page=obj.curr;
+if(!first){
+window.open($('#jinsom-bbs-list-ajax-page').attr('url')+'/?type='+type+'&index='+index+'&page='+page,'_self');
+}
+}
+});
+});
+}
+
+//瀑布流渲染
+if($(obj).parents('.jinsom-bbs-box').next().hasClass('jinsom-bbs-list-4')){
+grid.masonry('reloadItems');  
+grid.imagesLoaded().progress( function() {
+grid.masonry('layout');
+}); 
+}
+
+}
+});
+}
+}
+
+//论坛列表加载更多
+function jinsom_ajax_bbs(obj,type){
+$(obj).before(jinsom.loading_post);
+$(obj).hide();
+page=$(obj).attr('data');
+bbs_id=$('.jinsom-bbs-header').attr('data');
+topic=$('.jinsom-bbs-box-header .left li.on').attr('topic');
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/data/bbs.php",
+data: {page:page,bbs_id:bbs_id,type:type,topic:topic},
+success: function(msg){   
+$('.jinsom-load-post').remove();
+$(obj).show();
+if(msg==0){
+layer.msg('没有更多内容！');
+$(obj).remove();
+}else{
+$(obj).before(msg);//追加内容
+
+//瀑布流渲染
+if($(obj).parent().hasClass('jinsom-bbs-list-4')){
+grid.masonry('reloadItems');  
+grid.imagesLoaded().progress( function() {
+grid.masonry('layout');
+}); 
+}
+
+paged=parseInt(page)+1;
+$(obj).attr('data',paged);	
+}
+
+}
+});
+}
+
+
+//论坛ajax搜索
+function jinsom_ajax_bbs_search(){
+content=$('#jinsom-bbs-search').val();
+bbs_id=$('.jinsom-bbs-header').attr('data');
+if($.trim(content)==''){
+layer.msg('请输入你要搜索的内容！');
+return false;
+}
+
+$('.jinsom-bbs-list-box').html(jinsom.loading_post);
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/data/bbs-search.php",
+data: {page:1,bbs_id:bbs_id,content:content},
+success: function(msg){   
+
+$('.jinsom-bbs-list-box').empty();
+$('.jinsom-bbs-list-box').html(msg);//追加内容
+
+//瀑布流渲染
+if($('.jinsom-bbs-list-box').hasClass('jinsom-bbs-list-4')){
+grid.masonry('reloadItems');  
+grid.imagesLoaded().progress( function() {
+grid.masonry('layout');
+});
+}
+
+}
+});
+}
+
+
+//论坛ajax搜索 加载更多
+function jinsom_ajax_bbs_search_more(obj){
+$(obj).html(jinsom.loading_post);
+page=parseInt($(obj).attr('data'));
+content=$('#jinsom-bbs-search').val();
+bbs_id=$('.jinsom-bbs-header').attr('data');
+if($.trim(content)==''){
+layer.msg('请输入你要搜索的内容！');
+return false;
+}
+$.ajax({
+type: "POST",
+url:jinsom.jinsom_ajax_url+"/data/bbs-search.php",
+data: {page:page,bbs_id:bbs_id,content:content},
+success: function(msg){   
+$('.jinsom-bb-search-more').html('加载更多');
+if(msg==0){
+layer.msg('没有更多的内容！');
+$('.jinsom-bb-search-more').remove();
+}else{
+
+$('.jinsom-bb-search-more').attr('data',page+1);
+
+$('.jinsom-bb-search-more').before(msg);//追加内容
+
+//瀑布流渲染
+if($(obj).parent().hasClass('jinsom-bbs-list-4')){
+grid.masonry('reloadItems');  
+grid.imagesLoaded().progress( function() {
+grid.masonry('layout');
+});
+}
+	
+}
+
+}
+});
 }

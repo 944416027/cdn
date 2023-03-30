@@ -1,8 +1,74 @@
 
+//小程序
+$(document).on('page:beforeinit', function (e) {
+if(is_miniprogram()){
+var page = e.detail.page;
+if(page.name!='post-single'){
+wx.miniProgram.postMessage({data:{url:jinsom.home_url,title:jinsom.site_name}})
+}
+}else{
+if(history.length>0){
+$('.views').css('height','100%');
+}
+}
+});
+
+//返回页面
+$(document).on('page:afterback', function (e) {
+// console.log(e.detail.page)
+function page_back_setTimeout(){
+if(is_miniprogram()){
+if($('.page-on-center').attr('data-page')=='post-single'){
+url=$('.page-on-center .jinsom-single').attr('url');
+if(!url){url=jinsom.home_url;}
+title=$('.page-on-center .jinsom-single h1').text();
+if(!title){
+title=$('.page-on-center .jinsom-single .jinsom-post-single-content p').text();
+}
+img=$('.page-on-center .jinsom-single .jinsom-post-single-content').find('img[loading="lazy"]').attr('src');
+if(!img){
+img=$('.page-on-center .jinsom-single .jinsom-post-images-list').find('img[loading="lazy"]').attr('src');
+}
+if($('.page-on-center').hasClass('post-video')){
+img=$('.page-on-center .jinsom-single .jinsom-video-img').attr('style');
+arr=img.split('url(');
+img=arr[1].replace(");","");
+}
+if(!title){title=jinsom.site_name;}
+wx.miniProgram.postMessage({data:{url:url,title:title,img:img}})
+// console.log(img,title,url);
+}
+}
+}
+setTimeout(page_back_setTimeout,400);
+});
+
 
 //---------------------------内容详情页面-----------------
 myApp.onPageBeforeInit('post-single',function(page){
 post_id=page.query['post_id'];
+type=page.query['type'];
+
+//小程序
+if(is_miniprogram()){
+title=$('.jinsom-single.jinsom-post-'+post_id+' h1').text();
+if(!title){
+title=$('.jinsom-single.jinsom-post-'+post_id+' .jinsom-post-single-content p').text();
+}
+img=$('.jinsom-single.jinsom-post-'+post_id +' .jinsom-post-single-content').find('img[loading="lazy"]').attr('src');
+if(!img){
+img=$('.jinsom-single.jinsom-post-'+post_id +' .jinsom-post-images-list').find('img[loading="lazy"]').attr('src');
+}
+if(type=='video'){
+if($('.jinsom-single.jinsom-post-'+post_id+' .jinsom-video-img').length>0){
+img=$('.jinsom-single.jinsom-post-'+post_id+' .jinsom-video-img').attr('style');
+arr=img.split('url(');
+img=arr[1].replace(");","");
+}
+}
+if(!title){title=jinsom.site_name;}
+wx.miniProgram.postMessage({data:{ url:page.query['url'],title:title,img:img}})
+}
 
 if($('.jinsom-video-playing').length>0){
 current_post_id=$('.jinsom-video-playing').attr('post_id');
@@ -88,6 +154,11 @@ $('.jinsom-page-single-content-'+post_id).animate({scrollTop:$(".jinsom-single-c
 
 });
 
+myApp.onPageBack('post-single', function (page){//内容页面返回
+if(is_miniprogram()){
+wx.miniProgram.postMessage({data:{url:jinsom.home_url,title:jinsom.site_name}})
+}
+});
 
 
 
@@ -547,6 +618,34 @@ $('.jinsom-cash-form-content .number n').text(number+'元');
 });
 });
 
+//---------------------------转账确定-----------------
+myApp.onPageBeforeInit('transfer-confirm',function(page){
+$('.jinsom-transfer-confirm .type>m').click(function(){
+$(this).addClass('on').siblings().removeClass('on');
+if($(this).attr('type')=='credit'){
+$('.transfer-credit').show();
+$('.transfer-money').hide();
+$('.transfer-extcredits').hide();
+}else if($(this).attr('type')=='money'){
+$('.transfer-credit').hide();
+$('.transfer-money').show();
+$('.transfer-extcredits').hide();
+}else if($(this).attr('type')=='extcredits'){
+$('.transfer-credit').hide();
+$('.transfer-money').hide();
+$('.transfer-extcredits').show();
+}
+});
+});
+
+//---------------------------积分兑换-----------------
+myApp.onPageBeforeInit('exchange-extcredits',function(page){
+$("#jinsom-extcredits-exchange-number").bind("input propertychange",function(){
+number=Math.floor($(this).val()/$(this).attr('data'));
+$('.jinsom-cash-form-content .number n').text(number+' '+$(this).attr('data-name'));
+});
+});
+
 
 //签到
 myApp.onPageBeforeInit('sign', function (page){
@@ -557,7 +656,7 @@ if(res.ret === 0){jinsom_sign(document.getElementById('sign-1'),res.ticket,res.r
 });
 }else{
 $('#sign-1').click(function(){
-myApp.loginScreen();
+jinsom_login_page();
 });
 }
 }
@@ -773,6 +872,15 @@ if(res.ret === 0){jinsom_login_phone(res.ticket,res.randstr);}
 }
 });
 
+//密码登录
+myApp.onPageBeforeInit('login', function (page) {
+if($('#login-1').length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('login-1'),jinsom.machine_verify_appid,function(res){
+if(res.ret === 0){jinsom_login(res.ticket,res.randstr);}
+});
+}
+});
+
 
 
 //发布红包
@@ -892,7 +1000,7 @@ avatar.resetImage();
 myApp.onPageInit('setting', function (page) {
 $('.jinsom-setting-box li.vip-time').change(function(event) {//设置VIP到期时间
 vip_time=$(this).children('input').val();
-author_id=$('.jinsom-setting-content').attr('data');
+author_id=$(this).attr('data');
 this_dom=$(this);
 $.ajax({
 type:"POST",
@@ -910,7 +1018,7 @@ this_dom.find('.value').html(vip_time);
 
 $('.jinsom-setting-box li.blacklist').change(function(event) {//设置黑名单
 blacklist=$(this).children('input').val();
-author_id=$('.jinsom-setting-content').attr('data');
+author_id=$(this).attr('data');
 this_dom=$(this);
 $.ajax({
 type:"POST",
@@ -930,7 +1038,7 @@ this_dom.find('.value').html(blacklist);
 $('.jinsom-setting-box li.verify select').change(function(event){//设置认证类型
 verify=$(this).val();
 verify_text=$(this).children('option:selected').attr('data');
-author_id=$('.jinsom-setting-content').attr('data');
+author_id=$(this).attr('data');
 this_dom=$(this);
 $.ajax({
 type:"POST",
@@ -948,7 +1056,7 @@ this_dom.siblings('.value').html(verify_text);
 
 $('.jinsom-setting-box li.user_power select').change(function(event){//设置用户组
 user_power=$(this).val();
-author_id=$('.jinsom-setting-content').attr('data');
+author_id=$(this).attr('data');
 this_dom=$(this);
 $.ajax({
 type:"POST",
@@ -1181,10 +1289,10 @@ $('[data-page=topic] .navbar-inner.navbar-on-center').removeClass('color');
 
 
 if(contentH - viewH - scrollTop-navbarH <20){ //到达底部时,加载新内容
-if($('.jinsom-topic-content .jinsom-loading').length==0&&$('.jinsom-topic-content .jinsom-empty-page').length==0){
+if($('.jinsom-topic-content .jinsom-load-post').length==0&&$('.jinsom-topic-content .jinsom-empty-page').length==0){
 more_list=$('.jinsom-topic-post-list');
 page=parseInt(more_list.attr('page'));
-more_list.after(jinsom.loading);
+more_list.after(jinsom.loading_post);
 type=more_list.attr('type');
 $.ajax({
 type: "POST",
@@ -1198,7 +1306,7 @@ more_list.attr('page',page);
 }else{
 more_list.append('<div class="jinsom-empty-page">没有更多内容</div>'); 
 }
-$('.jinsom-load').remove();
+$('.jinsom-load-post').remove();
 }
 });
 
@@ -1277,14 +1385,13 @@ $('[data-page=member-mine] .navbar-inner.navbar-on-center').removeClass('color')
 });
 
 
-//查看自己头像
-$('.jinsom-member-header .avatarimg').on('click',function(){
-avatar_url=$(this).children('img').attr('src');
-show_avatar = myApp.photoBrowser({
-photos : [avatar_url],
-theme:'dark',
+//查看头像
+$('.jinsom-member-header .avatarimg img').on('click',function(){
+show_avatar=myApp.photoBrowser({
+photos:[$(this).attr('src')],
 toolbar:false,
-type:'popup',
+exposition:false,
+swipeToClose:false,
 });
 show_avatar.open();
 });
@@ -1342,13 +1449,12 @@ $('[data-page=member-other] .navbar-inner.navbar-on-center').removeClass('color'
 
 
 //查看他人头像
-$('.jinsom-member-header .avatarimg').on('click',function(){
-avatar_url=$(this).children('img').attr('src');
-show_avatar = myApp.photoBrowser({
-photos : [avatar_url],
-theme:'dark',
+$('.jinsom-member-header .avatarimg img').on('click',function(){
+show_avatar=myApp.photoBrowser({
+photos:[$(this).attr('src')],
 toolbar:false,
-type:'popup',
+exposition:false,
+swipeToClose:false,
 });
 show_avatar.open();
 });
@@ -1502,6 +1608,10 @@ ws.send('{"from_url":"'+jinsom.home_url+'","type":"input-close","notice_user_id"
 myApp.onPageBeforeInit('chat-group',function(page){
 bbs_id=page.query.bbs_id;
 jinsom_lightbox();
+
+$('#jinsom-chat-group-'+bbs_id+' .tips').remove();//消灭提示
+jinsom_update_notice_tips();//同步消息数
+
 $('.jinsom-chat-group-list-content').scrollTop($('.jinsom-chat-group-list-content')[0].scrollHeight);
 
 
@@ -1535,14 +1645,14 @@ if($('.jinsom-load-post').length>0){
 return false;	
 }
 page=parseInt($('.jinsom-chat-group-list-content').attr('page'));
-if(page>3){
+if(page>jinsom.chat_group_novip_note_max){
 if(!jinsom.is_vip){
-layer.open({content:'非VIP用户只能查看3页群聊记录！',skin:'msg',time:2});
+layer.open({content:'非VIP用户只能查看'+jinsom.chat_group_novip_note_max+'页群聊记录！',skin:'msg',time:2});
 return false;	
 }
 }
-if(page>15){
-layer.open({content:'最多只能查看15页群聊记录！',skin:'msg',time:2});
+if(page>30){
+layer.open({content:'最多只能查看30页群聊记录！',skin:'msg',time:2});
 return false;	
 }
 $('.jinsom-chat-group-list').before(jinsom.loading_post);//加载动画
@@ -1582,7 +1692,7 @@ $('#im-file').val('');
 if(msg.code==1){
 
 
-ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","content":"'+msg.id+'"}');
+ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group","do_user_id":"'+msg.do_user_id+'","bbs_id":"'+msg.bbs_id+'","group_type":"'+msg.group_type+'","message":"'+msg.message+'","do_user_avatar":"'+msg.do_user_avatar+'","do_user_name":"'+msg.do_user_name+'","content":"'+msg.id+'","notice_user_name":"'+jinsom.nickname_base+'"}');
 
 
 $('.jinsom-chat-group-list').append('<li class="myself"  id="jinsom-chat-content-'+msg.id+'"><div class="jinsom-chat-message-list-user-info avatarimg-'+jinsom.user_id+'">'+jinsom.avatar+'</div><div class="jinsom-chat-message-list-content" onclick="jinsom_chat_content_more('+msg.id+','+jinsom.user_id+','+bbs_id+')"><a href="'+msg.file_url+'" data-fancybox="gallery"><img src="'+msg.file_url+'"></a></div></li>');
@@ -1621,39 +1731,39 @@ ws.send('{"from_url":"'+jinsom.home_url+'","type":"chat_group_back","do_user_id"
 
 //---------------------------发布动态页面-----------------
 myApp.onPageBeforeInit('publish',function(page){
-type=page.query.type;
+publish_type=page.query.type;
 
-if(type=='words'){
-if($('#publish-'+type).length>0&&!jinsom.is_admin){
-new TencentCaptcha(document.getElementById('publish-'+type),jinsom.machine_verify_appid,function(res){
+if(publish_type=='words'){
+if($('#publish-'+publish_type).length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('publish-'+publish_type),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_words(res.ticket,res.randstr);}
 });
 }
-}else if(type=='music'){
-if($('#publish-'+type).length>0&&!jinsom.is_admin){
-new TencentCaptcha(document.getElementById('publish-'+type),jinsom.machine_verify_appid,function(res){
+}else if(publish_type=='music'){
+if($('#publish-'+publish_type).length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('publish-'+publish_type),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_music_video('music',res.ticket,res.randstr);}
 });
 }
-}else if(type=='video'){
-if($('#publish-'+type).length>0&&!jinsom.is_admin){
-new TencentCaptcha(document.getElementById('publish-'+type),jinsom.machine_verify_appid,function(res){
+}else if(publish_type=='video'){
+if($('#publish-'+publish_type).length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('publish-'+publish_type),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_music_video('video',res.ticket,res.randstr);}
 });
 }
-}else if(type=='single'){
-if($('#publish-'+type).length>0&&!jinsom.is_admin){
-new TencentCaptcha(document.getElementById('publish-'+type),jinsom.machine_verify_appid,function(res){
+}else if(publish_type=='single'){
+if($('#publish-'+publish_type).length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('publish-'+publish_type),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_single(res.ticket,res.randstr);}
 });
 }	
-}else if(type=='secret'){
-if($('#publish-'+type).length>0&&!jinsom.is_admin){
-new TencentCaptcha(document.getElementById('publish-'+type),jinsom.machine_verify_appid,function(res){
+}else if(publish_type=='secret'){
+if($('#publish-'+publish_type).length>0&&!jinsom.is_admin){
+new TencentCaptcha(document.getElementById('publish-'+publish_type),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_secret(res.ticket,res.randstr);}
 });
 }	
-}else if(type=='bbs'){//帖子类型||发布帖子||发表帖子
+}else if(publish_type=='bbs'){//帖子类型||发布帖子||发表帖子
 if($('#publish-bbs').length>0&&!jinsom.is_admin){
 new TencentCaptcha(document.getElementById('publish-bbs'),jinsom.machine_verify_appid,function(res){
 if(res.ret === 0){jinsom_publish_bbs(res.ticket,res.randstr);}
@@ -1676,41 +1786,42 @@ $(this).addClass('on').siblings().removeClass('on');
 $('input[name="bbs_child_id"]').val($(this).attr('data'));
 });
 
+//权限
 $('.jinsom-publish-power-list').children('li').eq(0).addClass('on');
-type=$('.jinsom-publish-power-list').children('li').eq(0).attr('type');
-$('input[name="post-type"]').val(type);
+post_type=$('.jinsom-publish-power-list').children('li').eq(0).attr('type');
+$('input[name="post-type"]').val(post_type);
 
-if(type=='pay_see'){
+if(post_type=='pay_see'){
 $('.power-content .price,.power-content .credit-type').show();
 }
-if(type=='answer'){
+if(post_type=='answer'){
 $('.power-content .answer-price').show();
 }
-if(type=='pay_see'||type=='vip_see'||type=='login_see'||type=='comment_see'){
-$('.power-content textarea').show();
+if(post_type=='pay_see'||post_type=='vip_see'||post_type=='login_see'||post_type=='comment_see'){
+$('.power-content .hidden-textarea').show();
 }
 
 $("body").on("click",'.jinsom-publish-power-list li', function(e){
 $('.jinsom-publish-power-list-form li').eq($(this).index()).addClass('on').siblings().removeClass('on');
-type=$(this).attr('type');
-$('input[name="post-type"]').val(type);
+post_type=$(this).attr('type');
+$('input[name="post-type"]').val(post_type);
 
-if(type=='pay_see'){
+if(post_type=='pay_see'){
 $('.power-content .price,.power-content .credit-type').show();
 }
-if(type=='answer'){
-$('.power-content .price,.power-content .credit-type,.power-content textarea').hide();
+if(post_type=='answer'){
+$('.power-content .price,.power-content .credit-type,.power-content .hidden-textarea').hide();
 $('.power-content .answer-price').show();
 }
-if(type=='pay_see'||type=='vip_see'||type=='login_see'||type=='comment_see'){
-$('.power-content textarea').show();
+if(post_type=='pay_see'||post_type=='vip_see'||post_type=='login_see'||post_type=='comment_see'){
+$('.power-content .hidden-textarea').show();
 $('.power-content .answer-price').hide();
-if(type!='pay_see'){
+if(post_type!='pay_see'){
 $('.power-content .price,.power-content .credit-type,.power-content .credit-type').hide();	
 }
 }
-if(type=='activity'||type=='vote'||type=='normal'){
-$('.power-content .price,.power-content .credit-type,.power-content .answer-price,.power-content textarea').hide();
+if(post_type=='activity'||post_type=='vote'||post_type=='normal'){
+$('.power-content .price,.power-content .credit-type,.power-content .answer-price,.power-content .hidden-textarea').hide();
 }
 layer.closeAll();
 });
@@ -1718,29 +1829,29 @@ layer.closeAll();
 }
 
 
-if(type!='bbs'&&type!='secret'){//不是帖子
+if(publish_type!='bbs'&&publish_type!='secret'){//不是帖子
 $("body").on("click",'.jinsom-publish-power-list li', function(e){
 $('.jinsom-publish-power-list-form li').eq($(this).index()).addClass('on').siblings().removeClass('on');
-type=$(this).attr('type');
+post_type=$(this).attr('type');
 $('#jinsom-pop-power').val($(this).attr('data'));
 
 
-if(type=='pay'||type=='password'||type=='vip'||type=='login'||type=='comment'||type=='verify'||type=='follow'){
-$('.power-content textarea,.power-content label,.power-content .img-power').show();
+if(post_type=='pay'||post_type=='password'||post_type=='vip'||post_type=='login'||post_type=='comment'||post_type=='verify'||post_type=='follow'){
+$('.power-content .hidden-textarea,.power-content label,.power-content .img-power').show();
 
-if(type=='pay'){
+if(post_type=='pay'){
 $('.power-content .price,.power-content .credit-type').show();
 $('.power-content .password').hide();
 }
-if(type=='password'){
+if(post_type=='password'){
 $('.power-content .password').show();
 $('.power-content .price,.power-content .credit-type').hide();
 }
-if(type=='vip'||type=='login'){
+if(post_type=='vip'||post_type=='login'||post_type=='comment'||post_type=='verify'||post_type=='follow'){
 $('.power-content .price,.power-content .credit-type,.power-content .password').hide();
 }
-}else if(type=='open'||type=='private'){
-$('.power-content .price,.power-content .credit-type,.power-content .password,.power-content textarea,.power-content label,.power-content .img-power').hide();
+}else if(post_type=='open'||post_type=='private'){
+$('.power-content .price,.power-content .credit-type,.power-content .password,.power-content .hidden-textarea,.power-content label,.power-content .img-power').hide();
 }
 layer.closeAll();
 });
@@ -1748,12 +1859,12 @@ layer.closeAll();
 
 
 
-if(type!='video'&&type!='music'&&type!='secret'){
+if(publish_type!='video'&&publish_type!='music'&&publish_type!='secret'){
 document.querySelector('#file').addEventListener('change', function () {
 var that = this;
 var number=that.files.length;
 
-if(type=='words'){
+if(publish_type=='words'){
 var words_images_max=jinsom.words_images_max;//最大上传数量
 }else{
 var words_images_max=40;	
@@ -1766,8 +1877,16 @@ return false;
 
 a=0;//计时器
 for(i = 0; i< number; i ++) {
-$('.jinsom-publish-words-form .add i').hide();//显示加载loading
-$('.jinsom-publish-words-form .add span').css('display','inline-block');//显示加载loading
+
+//显示加载loading
+if(publish_type=='single'||publish_type=='bbs'){
+myApp.hidePreloader();
+myApp.showPreloader('上传中...');
+}else{
+$('.jinsom-publish-words-form .add i').hide();
+$('.jinsom-publish-words-form .add span').css('display','inline-block');
+}
+
 info=that.files[i];
 
 //获取长宽
@@ -1798,15 +1917,29 @@ $('.jinsom-publish-words-form .add').hide();//隐藏添加按钮
 }
 if(img_count<words_images_max){//如果上传的超过了9张就不载入容器
 if(msg.code==1){
+
+
+if(publish_type=='single'||publish_type=='bbs'){
+myApp.hidePreloader();
+if($('.jinsom-publish-words-form .images').hasClass('pay')){
+tinymce.get('jinsom-publish-single-hide-textarea').insertContent('<img src="'+msg.file_url+'">');
+}else{
+tinymce.get('jinsom-publish-single-textarea').insertContent('<img src="'+msg.file_url+'">');
+}
+$('#file').val('');//清空已选状态
+}else{
 $('#jinsom-publish-images-list').append('<li><i class="jinsom-icon jinsom-guanbi" onclick="jinsom_remove_image('+words_images_max+',this)"></i><a href="'+msg.file_url+'" data-fancybox="gallery-publish"><img src="'+msg.file_url+'"></a></li>');
 jinsom_lightbox();//渲染灯箱
 a++;
+}
 
 if(a==number){//如果照片已经上传完成就关闭
 $('#file').val('');//清空已选状态
 $('.jinsom-publish-words-form .add i').show();//关闭loading动画
 $('.jinsom-publish-words-form .add span').hide();	//关闭loading动画
 }
+
+
 
 }else{
 layer.open({content:msg.msg,skin:'msg',time:2});
@@ -1842,9 +1975,20 @@ $('.jinsom-publish-words-form .add').hide();//隐藏添加按钮
 }
 if(img_count<words_images_max){//如果上传的超过了9张就不载入容器
 if(msg.code==1){
+
+if(publish_type=='single'||publish_type=='bbs'){
+myApp.hidePreloader();
+if($('.jinsom-publish-words-form .images').hasClass('pay')){
+tinymce.get('jinsom-publish-single-hide-textarea').insertContent('<img src="'+msg.file_url+'">');
+}else{
+tinymce.get('jinsom-publish-single-textarea').insertContent('<img src="'+msg.file_url+'">');
+}
+$('#file').val('');//清空已选状态
+}else{
 $('#jinsom-publish-images-list').append('<li><i class="jinsom-icon jinsom-guanbi" onclick="jinsom_remove_image('+words_images_max+',this)"></i><a href="'+msg.file_url+'" data-fancybox="gallery-publish"><img src="'+msg.file_url+'"></a></li>');
 jinsom_lightbox();//渲染灯箱
 a++;
+}
 
 if(a==number){//如果照片已经上传完成就关闭
 $('#file').val('');//清空已选状态
@@ -1894,15 +2038,15 @@ var sortable = Sortable.create(el);
 
 
 
-if(type=='video'){
+if(publish_type=='video'){
 document.querySelector('#jinsom-upload-video').addEventListener('change', function () {
 
 //判断后缀
 var location=$(this).val();
 var point=location.lastIndexOf(".");
-type=location.substr(point+1);
-if(jinsom.upload_video_type.indexOf(type)== -1 ){
-layer.open({content:'不支持该文件类型！'+type,skin:'msg',time:2});
+video_type=location.substr(point+1);
+if(jinsom.upload_video_type.indexOf(video_type)== -1 ){
+layer.open({content:'不支持该文件类型！'+video_type,skin:'msg',time:2});
 $('#jinsom-upload-video').val('');
 return false;
 }
@@ -2059,15 +2203,15 @@ layer.open({content:msg.msg,skin:'msg',time:2});
 }
 
 
-if(type=='music'){//上传音乐
+if(publish_type=='music'){//上传音乐
 document.querySelector('#jinsom-upload-music').addEventListener('change', function () {
 
 //判断后缀
 var location=$(this).val();
 var point=location.lastIndexOf(".");
-type=location.substr(point+1);
-if(jinsom.upload_music_type.indexOf(type)== -1 ){
-layer.open({content:'不支持该文件类型！'+type,skin:'msg',time:2});
+music_type=location.substr(point+1);
+if(jinsom.upload_music_type.indexOf(music_type)== -1 ){
+layer.open({content:'不支持该文件类型！'+music_type,skin:'msg',time:2});
 return false;
 }
 	
@@ -2114,7 +2258,7 @@ return false;
 
 
 
-if(type!='select'){
+if(publish_type!='secret'){
 
 jinsom_comment_aite_user_js();//发布@好友
 
@@ -2127,6 +2271,7 @@ type: "POST",
 url: jinsom.mobile_ajax_url+"/topic/topic-hot.php",
 success: function(msg){
 html='';
+if(msg.code==1){
 for (var i = 0; i < msg.data.length; i++){
 html+='\
 <li onclick="jinsom_publish_topic_selete(this)" data="'+msg.data[i].name+'">\
@@ -2134,6 +2279,7 @@ html+='\
 <div class="name">#'+msg.data[i].name+'#</div>\
 <div class="hot"><i class="jinsom-icon jinsom-huo"></i> '+msg.data[i].hot+'</div>\
 </li>';
+}
 }
 $('.jinsom-publish-aite-form .list.topic').html(html);
 }
@@ -2144,7 +2290,7 @@ $('.jinsom-publish-aite-form .list.topic').html(html);
 
 }
 
-if(type=='secret'){
+if(publish_type=='secret'){
 $('.jinsom-publish-secret-color-list li').click(function(){
 $(this).parent().prev().children('textarea').css('background',$(this).attr('data'));
 $('[name=color]').val($(this).attr('data'));
@@ -2159,6 +2305,92 @@ $(this).addClass('on').siblings().removeClass('on');
 $('#jinsom-pay-credit-type').val($(this).attr('data'));
 });
 
+
+
+if(publish_type=='single'||publish_type=='bbs'){
+
+
+
+tinymce.init({
+selector: '#jinsom-publish-single-textarea',
+height: 400,
+statusbar:false,
+plugins: 'autosave',
+toolbar: 'undo redo bold italic alignleft aligncenter custom_emoji custom_images',
+autosave_interval: '10s',
+autosave_retention:'43776m',
+autosave_restore_when_empty: true,
+autosave_ask_before_unload:false,
+autosave_prefix:'single_autosave_',
+content_style:'img {max-width: 60%;}',
+relative_urls: false,
+remove_script_host: false,
+setup: function (editor) {
+editor.ui.registry.addButton('custom_images',{
+icon: 'image',
+onAction: function () {
+$('.jinsom-publish-words-form .images').addClass('normal').removeClass('pay');
+$('.jinsom-publish-words-form .add input').click();
+}
+});
+editor.ui.registry.addButton('custom_emoji',{
+icon: 'emoji',
+onAction: function () {
+$('.jinsom-smile-form span').attr('data','jinsom-publish-single-textarea');
+$('.jinsom-publish-words-form .content>.smile').click();
+}
+});
+}
+});	
+
+
+tinymce.init({
+selector: '#jinsom-publish-single-hide-textarea',
+height: 300,
+statusbar:false,
+plugins: 'autosave',
+toolbar: 'undo redo bold italic alignleft aligncenter custom_emoji custom_images',
+autosave_interval: '10s',
+autosave_retention:'43776m',
+autosave_restore_when_empty: true,
+autosave_ask_before_unload:false,
+autosave_prefix:'single_hide_autosave_',
+relative_urls: false,
+remove_script_host: false,
+content_style:'img {max-width: 60%;}',
+setup: function (editor) {
+editor.ui.registry.addButton('custom_images',{
+icon: 'image',
+onAction: function () {
+$('.jinsom-publish-words-form .images').addClass('pay').removeClass('normal');
+$('.jinsom-publish-words-form .add input').click();
+}
+});
+editor.ui.registry.addButton('custom_emoji',{
+icon: 'emoji',
+onAction: function () {
+$('.jinsom-smile-form span').attr('data','jinsom-publish-single-hide-textarea');
+$('.jinsom-publish-words-form .content>.smile').click();
+}
+});
+}
+});	
+
+
+
+}
+
+});
+
+//发表页面返回
+myApp.onPageBack('publish',function(page){
+if($('#jinsom-publish-single-textarea').length>0){
+tinymce.get('jinsom-publish-single-textarea').destroy();
+$('.jinsom-publish-words-form .content textarea').hide();
+}
+if($('#jinsom-publish-single-hide-textarea').length>0){
+tinymce.get('jinsom-publish-single-hide-textarea').destroy();
+}
 });
 
 
@@ -2171,15 +2403,18 @@ $('.jinsom-recharge-money-input input').val($(this).children('.bottom').find('m'
 $('.jinsom-recharge-type li').click(function() {
 $('#jinsom-credit-recharge-form input[name="WIDout_trade_no"]').val(new Date().getTime());
 $(this).addClass('on').siblings().removeClass('on');
-type=$(this).attr('data');
-$('#jinsom-recharge-type').val(type);
-if(type=='alipay_mobile'){
+recharge_type=$(this).attr('data');
+$('#jinsom-recharge-type').val(recharge_type);
+if(recharge_type=='alipay_mobile'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/alipay/alipay-h5.php');	
-}else if(type=='wechatpay_mp'){
+}else if(recharge_type=='wechatpay_mp'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/wechatpay/wechat-mp.php');	
-}else if(type=='epay_alipay'||type=='epay_wechatpay'){
-$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+type+'">');
+}else if(recharge_type=='epay_alipay'||recharge_type=='epay_wechatpay'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/epay/index.php');	
+}else if(recharge_type=='epusdt'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/Epusdt/pay.php');	
 }
 });
 $('.jinsom-recharge-type li.on').click();
@@ -2195,15 +2430,44 @@ $('#jinsom-credit-recharge-number').val($(this).children('.bottom').attr('data')
 $('.jinsom-recharge-type li').click(function() {
 $('#jinsom-credit-recharge-form input[name="WIDout_trade_no"]').val(new Date().getTime());
 $(this).addClass('on').siblings().removeClass('on');
-type=$(this).attr('data');
-$('#jinsom-recharge-type').val(type);
-if(type=='alipay_mobile'){
+recharge_type=$(this).attr('data');
+$('#jinsom-recharge-type').val(recharge_type);
+if(recharge_type=='alipay_mobile'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/alipay/alipay-h5.php');	
-}else if(type=='wechatpay_mp'){
+}else if(recharge_type=='wechatpay_mp'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/wechatpay/wechat-mp.php');	
-}else if(type=='epay_alipay'||type=='epay_wechatpay'){
-$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+type+'">');
+}else if(recharge_type=='epay_alipay'||recharge_type=='epay_wechatpay'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/epay/index.php');	
+}else if(recharge_type=='epusdt'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/Epusdt/pay.php');	
+}
+});
+$('.jinsom-recharge-type li.on').click();
+});
+
+//---------------------------//充值积分页面-----------------
+myApp.onPageAfterAnimation('recharge-extcredits',function(page){
+$('.jinsom-recharge-number li').click(function() {
+$(this).addClass('on').siblings().removeClass('on');
+$('#jinsom-credit-recharge-number').val($(this).children('.bottom').attr('data'));
+});
+$('.jinsom-recharge-type li').click(function() {
+$('#jinsom-credit-recharge-form input[name="WIDout_trade_no"]').val(new Date().getTime());
+$(this).addClass('on').siblings().removeClass('on');
+recharge_type=$(this).attr('data');
+$('#jinsom-recharge-type').val(recharge_type);
+if(recharge_type=='alipay_mobile'){
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/alipay/alipay-h5.php');	
+}else if(recharge_type=='wechatpay_mp'){
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/wechatpay/wechat-mp.php');	
+}else if(recharge_type=='epay_alipay'||recharge_type=='epay_wechatpay'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/epay/index.php');	
+}else if(recharge_type=='epusdt'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+recharge_type+'">');
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/Epusdt/pay.php');	
 }
 });
 $('.jinsom-recharge-type li.on').click();
@@ -2228,9 +2492,9 @@ $('#jinsom-credit-recharge-number').val($(this).children('.bottom').attr('rmb_pr
 $('.jinsom-recharge-type li').click(function() {
 $('#jinsom-credit-recharge-form input[name="WIDout_trade_no"]').val(new Date().getTime());
 $(this).addClass('on').siblings().removeClass('on');
-type=$(this).attr('data');
-$('#jinsom-recharge-type').val(type);
-if(type=='creditpay'){
+vip_type=$(this).attr('data');
+$('#jinsom-recharge-type').val(vip_type);
+if(vip_type=='creditpay'){
 $('#jinsom-credit-recharge-number').val($('.jinsom-recharge-number li.on').children('.bottom').attr('credit_price'));
 $('.jinsom-recharge-number li .top z').hide();//隐藏赠送
 $(".jinsom-recharge-number li").each(function(){
@@ -2244,14 +2508,17 @@ $(".jinsom-recharge-number li").each(function(){
 $(this).children('.bottom').find('m').html($(this).children('.bottom').attr('rmb_price'));
 });
 $('.jinsom-recharge-number li .bottom i').html('元');
-if(type=='alipay_mobile'){
+if(vip_type=='alipay_mobile'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/alipay/alipay-h5.php');	
-}else if(type=='wechatpay_mp'){
+}else if(vip_type=='wechatpay_mp'){
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/wechatpay/wechat-mp.php');	
-}else if(type=='epay_alipay'||type=='epay_wechatpay'){
-$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+type+'">');
+}else if(vip_type=='epay_alipay'||vip_type=='epay_wechatpay'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+vip_type+'">');
 $('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/epay/index.php');	
-}	
+}else if(vip_type=='epusdt'){
+$('#jinsom-credit-recharge-form').append('<input type="hidden" name="pay_type" value="'+vip_type+'">');
+$('#jinsom-credit-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/Epusdt/pay.php');	
+}
 }
 });
 
@@ -2302,7 +2569,7 @@ $('.jinsom-load-post').remove();
 
 //我的粉丝页面
 myApp.onPageAfterAnimation('follower', function (page) {
-type=page.query['type'];
+follower_type=page.query['type'];
 
 //滚动事件
 $('.jinsom-follower-content').scroll(function(){
@@ -2319,7 +2586,7 @@ more_list.after(jinsom.loading);
 $.ajax({
 type: "POST",
 url:  jinsom.mobile_ajax_url+"/user/follower.php",
-data: {page:page,user_id:user_id,type:type},
+data: {page:page,user_id:user_id,type:follower_type},
 success: function(msg){
 if(msg.code!=0){  
 
@@ -2385,12 +2652,12 @@ if(contentH - viewH - scrollTop-navbarH <20){ //到达底部时,加载新内容
 if($('.jinsom-recharge-note-content .jinsom-loading').length==0&&$('.jinsom-recharge-note-content .jinsom-empty-page').length==0){
 more_list=$('.jinsom-chat-user-list.recharge-note');
 page=parseInt(more_list.attr('page'));
-type=more_list.attr('type');
+income_type=more_list.attr('type');
 more_list.after(jinsom.loading);
 $.ajax({
 type: "POST",
 url:  jinsom.mobile_ajax_url+"/note/credit.php",
-data: {page:page,type:type,author_id:$('.jinsom-recharge-note-content').attr('data')},
+data: {page:page,type:income_type,author_id:$('.jinsom-recharge-note-content').attr('data')},
 success: function(msg){
 if(msg.code!=0){  
 
@@ -2440,12 +2707,12 @@ if(contentH - viewH - scrollTop-navbarH <20){ //到达底部时,加载新内容
 if($('.jinsom-recharge-note-content .jinsom-loading').length==0&&$('.jinsom-recharge-note-content .jinsom-empty-page').length==0){
 more_list=$('.jinsom-chat-user-list.recharge-note');
 page=parseInt(more_list.attr('page'));
-type=more_list.attr('type');
+outlay_type=more_list.attr('type');
 more_list.after(jinsom.loading);
 $.ajax({
 type: "POST",
 url:  jinsom.mobile_ajax_url+"/note/credit.php",
-data: {page:page,type:type,author_id:$('.jinsom-recharge-note-content').attr('data')},
+data: {page:page,type:outlay_type,author_id:$('.jinsom-recharge-note-content').attr('data')},
 success: function(msg){
 if(msg.code!=0){  
 
@@ -2497,12 +2764,12 @@ if(contentH - viewH - scrollTop-navbarH <20){ //到达底部时,加载新内容
 if($('.jinsom-recharge-note-content .jinsom-loading').length==0&&$('.jinsom-recharge-note-content .jinsom-empty-page').length==0){
 more_list=$('.jinsom-chat-user-list.recharge-note');
 page=parseInt(more_list.attr('page'));
-type=more_list.attr('type');
+recharge_note_type=more_list.attr('type');
 more_list.after(jinsom.loading);
 $.ajax({
 type: "POST",
 url:  jinsom.mobile_ajax_url+"/note/credit.php",
-data: {page:page,type:type},
+data: {page:page,type:recharge_note_type},
 success: function(msg){
 if(msg.code!=0){  
 
@@ -2598,16 +2865,6 @@ layer.open({content:'上传失败！',skin:'msg',time:2});
 
 //任务事件
 myApp.onPageBeforeInit('task', function (page) {
-
-$.ajax({
-type: "POST",
-url:  jinsom.jinsom_ajax_url+"/action/commend-post.php",
-data: {},
-success: function(msg){
-
-}
-});
-
 $('#jinsom-task-navbar-center span').click(function(){
 $(this).addClass('on').siblings().removeClass('on');
 $('.jinsom-task-form-content').find('ul').eq($(this).index()).show().siblings().hide();
@@ -2618,7 +2875,7 @@ $('.jinsom-task-form-content').find('ul').eq($(this).index()).show().siblings().
 //生成内容海报
 myApp.onPageBeforeInit('content-playbill',function(page){
 url=page.query['url'];
-jinsom_qrcode('jinsom-content-playbill-code',60,60,url);
+jinsom_qrcode('jinsom-content-playbill-code',200,200,url);
 $('#jinsom-add-content-playbill').click(function(){
 obj=$(this);
 obj.html('<i class="fa fa-spinner fa-spin"></i> 海报生成中...')
@@ -2651,7 +2908,7 @@ height:height,
 
 vm.posterImg = canvas.toDataURL('image/jpeg')
 vm.mask = true;
-$('#jinsom-content-playbill').html('<img src="'+vm.posterImg+'">');
+$('#jinsom-content-playbill').html('<a href="'+vm.posterImg+'" download="海报"><img src="'+vm.posterImg+'"></a>');
 obj.after('<div class="jinsom-save-content-playbill">「 海报已生成，长按图片进行保存 」</div>');
 obj.remove()
 });
@@ -3340,6 +3597,9 @@ $('#jinsom-goods-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/wech
 }else if(type=='epay_alipay'||type=='epay_wechatpay'){
 $('#jinsom-goods-recharge-form').append('<input type="hidden" name="pay_type" value="'+type+'">');
 $('#jinsom-goods-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/epay/index.php');	
+}else if(type=='epusdt'){
+$('#jinsom-goods-recharge-form').append('<input type="hidden" name="pay_type" value="'+type+'">');
+$('#jinsom-goods-recharge-form').attr('action',jinsom.home_url+'/Extend/pay/Epusdt/pay.php');	
 }
 });
 $('.jinsom-recharge-type li.on').click();
@@ -3610,5 +3870,440 @@ $('.jinsom-load-post').remove();
 }
 });
 }); 
+
+});
+
+
+//内容页面返回 改变title
+myApp.onPageBack('post-single',function(page){
+
+$('title').html($('body').attr('title'));
+});
+
+
+//内容标记
+myApp.onPageBeforeInit('add-post-mark',function(page){
+$('.jinsom-add-post-mark-content li .color-list span').click(function(){
+$(this).addClass('on').siblings().removeClass('on');
+$('#jinsom-post-mark-color-val').val($(this).attr('data'));
+});
+});
+
+
+
+//靓号摇号
+myApp.onPageBeforeInit('liang-rand',function(page){
+
+$.getScript(jinsom.cdn_url+"/assets/js/liang.js");
+$('.liang-btn').click(function(){
+$('.select-btn').remove();
+obj=$(this);
+if(!obj.hasClass('no')){
+obj.addClass('no').children('m').text('正在摇号中...');
+$.ajax({
+type: "POST",
+url:  jinsom.mobile_ajax_url+"/action/liang-rand.php",
+data: {index:$('.liang-select option:selected').index()},
+success: function(msg){
+if(msg.code!=1){
+layer.open({content:msg.msg,skin:'msg',time:2});
+obj.removeClass('no').children('m').text('开始摇号');
+}
+if(msg.code==1){
+bounty.default({ el: '.liang-show', lineHeight: 2,letterSpacing: 1,animationDelay: 0, value: msg.liang });
+function c(){
+obj.removeClass('no').children('m').text('重新摇号');
+obj.after(msg.select_btn);
+}setTimeout(c,3500);
+}else if(msg.code==5){//余额
+function a(){myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page/mywallet/recharge-money.php'});}setTimeout(a,500);
+}else if(msg.code==6){//金币
+function a(){myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page/mywallet/recharge-credit.php'});}setTimeout(a,500);	
+}else if(msg.code==8){//VIP
+function a(){myApp.getCurrentView().router.load({url:jinsom.theme_url+'/mobile/templates/page/mywallet/recharge-vip.php'});}setTimeout(a,500);	
+}
+
+}
+});
+}
+});
+
+});
+
+//购物车
+myApp.onPageBeforeInit('shopping-cart',function(page){
+
+//单选
+$('.jinsom-shopping-cart-list .content-box input[type="checkbox"]').click(function(){
+var checked_length = $('.jinsom-shopping-cart-list .content-box input:checkbox:checked').length;
+var selected_num = parseInt($('.jinsom-shopping-cart-list .buy-bar .buy-btn em').text());
+if(selected_num < 0) {selected_num = 0;}
+
+jinbi = parseInt($('#selected-items-price-jinbi-total').text());
+yuan = parseFloat($('#selected-items-price-total').text());
+
+if($(this).is(':checked')) {
+$(this).prop('checked',true);
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn').addClass('ok');
+if($(this).attr('name') == 'jinbi') {
+$('#selected-items-price-jinbi-total').text(jinbi+parseInt($(this).val()));
+}else{
+$('#selected-items-price-total').text(yuan+parseFloat($(this).val()));
+}
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn em').text(selected_num + 1);
+}else{
+$(this).removeAttr('checked');
+if(checked_length<=0){
+$('.jinsom-shopping-cart-list .buy-bar input').removeAttr('checked');
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn').removeClass('ok');
+}
+if($(this).attr('name') == 'jinbi') {
+$('#selected-items-price-jinbi-total').text(jinbi-parseInt($(this).val()));
+}else{
+$('#selected-items-price-total').text(Math.round((yuan-parseFloat($(this).val())) * 100) / 100);
+}
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn em').text(selected_num - 1);
+}
+});
+
+// 全选
+$('.jinsom-shopping-cart-list .buy-bar input').change(function(){
+all_jinbi = 0;
+all_yuan = 0;
+
+if($(this).is(':checked')) {
+
+$('.jinsom-shopping-cart-list .content-box input[name="jinbi"]').each(function(i,n){
+all_jinbi += parseInt(n.value);
+});
+
+$('.jinsom-shopping-cart-list .content-box input[name="yuan"]').each(function(d,t){
+all_yuan += parseFloat(t.value);
+});
+
+$('.jinsom-shopping-cart-list .content-box input').each(function() {
+$(this).prop('checked',true);
+});
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn').addClass('ok');
+}else{
+
+all_jinbi = '0.00';
+all_yuan = '0.00';
+
+$('.jinsom-shopping-cart-list .content-box input').each(function() {
+$(this).removeAttr('checked');
+});
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn').removeClass('ok');
+}
+
+$('#selected-items-price-jinbi-total').text(all_jinbi);
+$('#selected-items-price-total').text(all_yuan);
+
+var selected_num = $('.jinsom-shopping-cart-list .content-box input:checkbox:checked').length;
+if(selected_num < 0) {selected_num = 0;}
+$('.jinsom-shopping-cart-list .buy-bar .buy-btn em').text(selected_num);
+
+});
+
+//减号
+$('.content-right .goods-price-info li.number i.jinsom-jianhao').click(function(){
+var number=parseInt($(this).siblings('input').val());
+if(!$(this).hasClass('no')){
+old_goods_price = $(this).parent().siblings('.price').find('em').text();
+goods_price = parseFloat($(this).parents('.content-right').siblings('input').attr('data-price'));
+$(this).parent().siblings('.price').find('em').text(goods_price * (number-1));
+$(this).parents('.content-right').siblings('input').val(goods_price * (number-1));
+goods_checked = $(this).parents('.content-right').siblings('input').is(':checked');
+if(goods_checked){
+// 如果商品已经被选中
+if($(this).parents('.content-right').siblings('input').attr('name') == 'jinbi'){ //如果付款类型是金币
+jinbi = parseInt($('#selected-items-price-jinbi-total').text());
+$('#selected-items-price-jinbi-total').text(jinbi - parseInt(old_goods_price) + goods_price * (number-1));
+}else{
+yuan = parseFloat($('#selected-items-price-total').text());
+$('#selected-items-price-total').text(yuan - parseFloat(old_goods_price) + goods_price * (number-1));
+}
+}
+if(number>2){
+$(this).siblings('input').val(number-1);
+}else{
+$(this).siblings('input').val(1);	
+$(this).addClass('no');
+}
+}
+});
+
+//加号
+$('.content-right .goods-price-info li.number i.jinsom-hao').click(function(){
+var number=parseInt($(this).siblings('input').val());
+old_goods_price = $(this).parent().siblings('.price').find('em').text();
+goods_price = parseFloat($(this).parents('.content-right').siblings('input').attr('data-price'));
+$(this).parent().siblings('.price').find('em').text(goods_price * (number+1));
+$(this).parents('.content-right').siblings('input').val(goods_price * (number+1));
+goods_checked = $(this).parents('.content-right').siblings('input').is(':checked');
+if(goods_checked){
+// 如果商品已经被选中
+if($(this).parents('.content-right').siblings('input').attr('name') == 'jinbi'){ //如果付款类型是金币
+jinbi = parseInt($('#selected-items-price-jinbi-total').text());
+$('#selected-items-price-jinbi-total').text(jinbi - parseInt(old_goods_price) + goods_price * (number+1));
+}else{
+yuan = parseFloat($('#selected-items-price-total').text());
+$('#selected-items-price-total').text(yuan - parseFloat(old_goods_price) + goods_price * (number+1));
+}
+}
+
+$(this).siblings('input').val(number+1);
+if((number+1)>1){
+$(this).siblings('.jinsom-jianhao').removeClass('no');
+}
+if((number+1)>99){
+$(this).siblings('input').val(99);
+}
+});
+
+//改变商品数量
+$('input[name="goods_number"]').bind('input propertychange change',function(){
+old_goods_price = $(this).parent().siblings('.price').find('em').text();
+goods_number = $(this).val();
+if(goods_number == '' || goods_number <= 0) {
+goods_number = 1;
+$(this).val(1);
+}
+
+if(goods_number>1){
+$(this).siblings('.jinsom-jianhao').removeClass('no');
+}
+if(goods_number>99){
+$(this).val(99);
+}
+goods_price = parseFloat($(this).parents('.content-right').siblings('input').attr('data-price'));
+$(this).parent().siblings('.price').find('em').text(goods_price * goods_number);
+$(this).parents('.content-right').siblings('input').val(goods_price * goods_number);
+
+goods_checked = $(this).parents('.content-right').siblings('input').is(':checked');
+if(goods_checked){
+// 如果商品已经被选中
+if($(this).parents('.content-right').siblings('input').attr('name') == 'jinbi'){ //如果付款类型是金币
+jinbi = parseInt($('#selected-items-price-jinbi-total').text());
+$('#selected-items-price-jinbi-total').text(jinbi - parseInt(old_goods_price) + goods_price * goods_number);
+}else{
+yuan = parseFloat($('#selected-items-price-total').text());
+$('#selected-items-price-total').text(yuan - parseFloat(old_goods_price) + goods_price * goods_number);
+}
+}
+});
+
+});
+
+//论坛申请
+myApp.onPageBeforeInit('apply-bbs',function(page){
+
+// 论坛头像上传
+document.querySelector('#apply-bbs-avatar-file').addEventListener('change',function(){
+var that = this;
+
+// 显示加载loading
+$('.bbs-upload-avatar-add i').hide();
+$('.bbs-upload-avatar-add span').css('display','inline-block');
+
+info=that.files[0];
+
+var reader = new FileReader();
+reader.onload = function (evt) {
+image=evt.target.result;
+$.ajax({
+type: "POST",
+dataType:'json',
+url:jinsom.jinsom_ajax_url+"/upload/apply-term-base64.php",
+data:{base64:image},
+success: function(msg){
+
+$('.bbs-upload-avatar-add').hide();
+
+if(msg.code==1){
+$('#bbs-avatar').attr('src',msg.file_url).show();
+$('#apply-bbs-avatar-url').val(msg.file_url);
+
+$('#apply-bbs-avatar-file').val('');//清空已选状态
+$('.bbs-upload-avatar-add span').hide();	//关闭loading动画
+
+}else{
+jinsom_msg(msg.msg);
+$('#apply-bbs-avatar-file').val('');//清空已选状态
+$('.bbs-upload-avatar-add').show();
+$('.bbs-upload-avatar-add i').show();//关闭loading动画
+$('.bbs-upload-avatar-add span').hide();	//关闭loading动画
+}
+
+}
+});
+
+}
+reader.readAsDataURL(info);
+
+});
+
+//发表权限
+$("#power_form").change(function(){
+$select_value=parseInt($(this).val());
+if($select_value==6){
+$("#jinsom-publish-power-lv").show();    
+}else{
+$("#jinsom-publish-power-lv").hide();     
+}
+if($select_value==7){
+$("#jinsom-publish-power-honor").show();    
+}else{
+$("#jinsom-publish-power-honor").hide();     
+}
+if($select_value==8){
+$("#jinsom-publish-power-verify").show();    
+}else{
+$("#jinsom-publish-power-verify").hide();     
+}
+});
+
+//回帖权限
+$("#jinsom-bbs-comment-power").change(function(){
+$select_value=parseInt($(this).val());
+if($select_value==6){
+$("#jinsom-bbs-comment-power-lv").show();    
+}else{
+$("#jinsom-bbs-comment-power-lv").hide();     
+}
+if($select_value==7){
+$("#jinsom-bbs-comment-power-honor").show();    
+}else{
+$("#jinsom-bbs-comment-power-honor").hide();     
+}
+if($select_value==8){
+$("#jinsom-bbs-comment-power-verify").show();    
+}else{
+$("#jinsom-bbs-comment-power-verify").hide();     
+}
+});
+
+//访问权限
+$("#visit_power_form").change(function(){
+$select_value=parseInt($(this).val());
+if($select_value==5){
+$("#jinsom-visit-power-pass").show();    
+}else{
+$("#jinsom-visit-power-pass").hide();     
+}
+if($select_value==6){
+$("#jinsom-visit-power-exp").show();    
+}else{
+$("#jinsom-visit-power-exp").hide();     
+}
+if($select_value==12){
+$("#jinsom-visit-power-vip-number").show();    
+}else{
+$("#jinsom-visit-power-vip-number").hide();     
+}
+if($select_value==7){
+$("#jinsom-visit-power-user").show();    
+}else{
+$("#jinsom-visit-power-user").hide();     
+}
+if($select_value==9){
+$("#jinsom-visit-power-honor").show();    
+}else{
+$("#jinsom-visit-power-honor").hide();     
+}
+if($select_value==10){
+$("#jinsom-visit-power-verify").show();    
+}else{
+$("#jinsom-visit-power-verify").hide();     
+}
+if($select_value==11){
+$("#jinsom-visit-power-pay").show();    
+}else{
+$("#jinsom-visit-power-pay").hide();     
+}
+});
+
+});
+
+//活跃用户 在线用户
+myApp.onPageAfterAnimation('online',function(page){
+
+//加载更多
+online_loading=false;
+online_page=2;
+online_list=$('.jinsom-online-content .jinsom-chat-user-list');
+$('.jinsom-online-content.infinite-scroll').on('infinite',function(){
+if (online_loading) return;
+online_loading = true;
+online_list.append(jinsom.loading_post);
+$.ajax({
+type: "POST",
+url:  jinsom.mobile_ajax_url+"/user/online.php",
+data: {page:online_page},
+success: function(msg){
+if(msg!=0){
+online_list.append(msg);
+online_loading = false; 
+online_page++;
+}else{
+online_loading = true; 
+}
+$('.jinsom-load-post').remove();
+}
+});
+}); 
+
+
+}); 
+
+// 内容管理
+myApp.onPageBeforeInit('content-manage', function (page){
+
+jinsom_content_manage_js_load('all');
+
+// tab ajax 切换
+$('.jinsom-content-manage-tab a').click(function(){
+this_type = $(this).attr('type');
+jinsom_content_manage_js_load(this_type);
+});
+
+//下拉刷新
+var ptrContent = $('.jinsom-content-manage-page-content.pull-to-refresh-content');
+ptrContent.on('refresh', function (e) {
+var manage_type = $('.jinsom-content-manage-tab a.active').attr('type');
+if($('.jinsom-load-post').length>0){//防止多次下拉
+return false;	
+}
+
+myApp.pullToRefreshDone();
+//下拉刷新完成
+jinsom_content_manage_js_load(manage_type);
+});
+
+//加载更多内容
+manage_loading = false;
+manage_page = 2;
+manage_post_list=$('.jinsom-content-manage>div.active');
+$('.jinsom-content-manage-page-content.infinite-scroll').on('infinite',function(){
+if(manage_loading) return;
+manage_loading = true;
+manage_post_list.after(jinsom.loading_post);
+manage_type = $('.jinsom-content-manage-tab a.active').attr('type');
+$.ajax({
+type: "POST",
+url:jinsom.mobile_ajax_url+"/stencil/content-manage.php",
+data: {type:manage_type,page:manage_page},
+success: function(msg){
+$('.jinsom-load-post').remove();
+if(msg==0){
+manage_loading = true;
+}else{
+manage_post_list.append(msg);
+manage_page++;
+manage_loading = false;
+} 
+}
+});
+});
 
 });
